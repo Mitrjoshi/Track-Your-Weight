@@ -1,0 +1,23 @@
+{
+  "cli": {
+    "version": ">= 3.0.0"
+  },
+  "build": {
+    "dev": {
+      "node": "20.19.4",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {},
+      "env": {}
+    },
+    "prod": {
+      "node": "20.19.4",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {},
+      "env": {}
+    }
+  }
+}

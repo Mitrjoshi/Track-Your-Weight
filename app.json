@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "track-your-weight",
+    "name": "Track Your Weight",
     "slug": "track-your-weight",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,11 +19,13 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.itsmitrr.trackyourweight"
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/favicon.png",
+      "bundler": "metro"
     },
     "plugins": [
       "expo-router",
@@ -43,6 +45,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "a5ac0e51-05eb-4efb-8617-66889ade095b"
+      }
+    },
+    "owner": "itsmitrr"
   }
 }

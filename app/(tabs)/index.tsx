@@ -1,98 +1,273 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import LineChart from "@/components/LineChart";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { useRealtimeWeightLog } from "@/hooks/tinybase/useRealtimeWeightLog";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { formatDate } from "@/utils/formatDates";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Link } from "expo-router";
+import React from "react";
+import { ScrollView, View } from "react-native";
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+export default function IndexScreen() {
+  const cardColor = useThemeColor({}, "menu");
+  const borderColor = useThemeColor({}, "input");
+  const secondaryText = useThemeColor({}, "secondaryText");
+  const backgroundColor = useThemeColor({}, "background");
 
-export default function HomeScreen() {
+  const { weightLog } = useRealtimeWeightLog();
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <ThemedView className="p-4 flex-1 flex-col gap-4">
+      <ScrollView
+        contentContainerStyle={{
+          gap: 12,
+        }}
+      >
+        <View
+          className="rounded-xl p-4 gap-4"
+          style={{
+            backgroundColor: cardColor,
+          }}
+        >
+          <View className="w-full flex-row items-center justify-between">
+            <ThemedText className="text-2xl font-bold">Weight</ThemedText>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+            {/* <View
+              style={{
+                elevation: 5,
+                backgroundColor: `${secondaryText}30`,
+                borderRadius: 8,
+                padding: 4,
+                borderWidth: 1,
+                borderColor,
+              }}
+              className="flex items-center flex-row gap-1"
+            >
+              <MaterialIcons
+                name="show-chart"
+                size={18}
+                className="!text-green-500"
+              />
+              <ThemedText className="font-bold text-sm !text-green-500">
+                0.5 kg
+              </ThemedText>
+            </View> */}
+
+            <Link
+              style={{
+                elevation: 5,
+                backgroundColor: `${secondaryText}30`,
+                borderRadius: 8,
+                padding: 4,
+                borderWidth: 1,
+                borderColor,
+                paddingHorizontal: 12,
+              }}
+              href="/(tabs)/add"
+            >
+              <ThemedText className="font-semibold">Add</ThemedText>
+            </Link>
+          </View>
+
+          <View
+            style={{
+              borderRadius: 12,
+              // backgroundColor: backgroundColor,
+              // elevation: 5,
+              overflow: "hidden",
+            }}
+          >
+            {weightLog && weightLog.length > 0 ? (
+              <View
+                style={{
+                  paddingTop: 28,
+                }}
+              >
+                <LineChart
+                  data={{
+                    labels: [],
+                    datasets: [
+                      {
+                        data: weightLog.map((log) => log.weight),
+                      },
+                    ],
+                  }}
+                />
+              </View>
+            ) : (
+              <View className="p-5 flex justify-center items-center">
+                <ThemedText className="font-semibold">
+                  No data available.
+                </ThemedText>
+              </View>
+            )}
+          </View>
+        </View>
+
+        <View
+          className="rounded-xl p-4 gap-4"
+          style={{
+            backgroundColor: cardColor,
+          }}
+        >
+          <View className="w-full flex-row items-center justify-between">
+            <ThemedText className="text-2xl font-bold">Progress</ThemedText>
+
+            <Link
+              style={{
+                elevation: 5,
+                backgroundColor: `${secondaryText}30`,
+                borderRadius: 8,
+                padding: 4,
+                borderWidth: 1,
+                borderColor,
+                paddingHorizontal: 12,
+              }}
+              href="/(tabs)/add"
+            >
+              <ThemedText className="font-semibold">Add Goal</ThemedText>
+            </Link>
+          </View>
+
+          <View
+            style={{
+              borderRadius: 12,
+              overflow: "hidden",
+            }}
+          >
+            <View className="p-5 flex justify-center items-center">
+              <ThemedText className="font-semibold">
+                No data available.
+              </ThemedText>
+            </View>
+          </View>
+        </View>
+
+        <View
+          className="rounded-xl p-4 gap-4"
+          style={{
+            backgroundColor: cardColor,
+          }}
+        >
+          <View className="w-full flex-row items-center justify-between">
+            <ThemedText className="text-2xl font-bold">BMI</ThemedText>
+
+            <Link
+              style={{
+                elevation: 5,
+                backgroundColor: `${secondaryText}30`,
+                borderRadius: 8,
+                padding: 4,
+                borderWidth: 1,
+                borderColor,
+                paddingHorizontal: 12,
+              }}
+              href="/(tabs)/add"
+            >
+              <ThemedText className="font-semibold">Calculate</ThemedText>
+            </Link>
+          </View>
+
+          <View
+            style={{
+              borderRadius: 12,
+            }}
+          >
+            <View className="p-5 flex justify-center items-center gap-2">
+              <ThemedText className="font-semibold">
+                No data available.
+              </ThemedText>
+            </View>
+          </View>
+        </View>
+
+        <View
+          className="rounded-xl p-4 gap-4"
+          style={{
+            backgroundColor: cardColor,
+          }}
+        >
+          <View className="w-full flex-row items-center justify-between">
+            <ThemedText className="text-2xl font-bold">History</ThemedText>
+          </View>
+
+          <View
+            style={{
+              borderRadius: 12,
+            }}
+          >
+            {weightLog && weightLog.length > 0 ? (
+              <View className="flex flex-col gap-2">
+                {weightLog.map((log, index) => (
+                  <View
+                    style={{
+                      backgroundColor,
+                    }}
+                    key={index}
+                    className="p-2 gap-2 flex-row items-center justify-start rounded-lg"
+                  >
+                    <View>
+                      <View
+                        className="w-12 h-12 flex justify-center items-center aspect-square rounded-lg"
+                        style={{
+                          backgroundColor: borderColor,
+                        }}
+                      >
+                        <MaterialIcons
+                          name="show-chart"
+                          size={32}
+                          className={
+                            weightLog[index - 1] &&
+                            weightLog[index - 1].weight < log.weight
+                              ? "!text-green-500"
+                              : "!text-red-500"
+                          }
+                        />
+                      </View>
+                    </View>
+
+                    <View className="flex-1 w-full">
+                      <View className="flex items-center flex-row justify-between w-full">
+                        <ThemedText className="text-xl font-bold">
+                          {log.weight} Kg
+                        </ThemedText>
+                        <ThemedText
+                          className="text-xs font-semibold"
+                          style={{
+                            color: secondaryText,
+                          }}
+                        >
+                          {formatDate(new Date(log.id))}
+                        </ThemedText>
+                      </View>
+                      {log.description && (
+                        <View>
+                          <ThemedText
+                            numberOfLines={1}
+                            ellipsizeMode="tail"
+                            style={{
+                              color: secondaryText,
+                            }}
+                          >
+                            {log.description}
+                          </ThemedText>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                ))}
+              </View>
+            ) : (
+              <View className="p-5 flex justify-center items-center gap-2">
+                <ThemedText className="font-semibold">
+                  No data available
+                </ThemedText>
+              </View>
+            )}
+          </View>
+        </View>
+      </ScrollView>
+    </ThemedView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
