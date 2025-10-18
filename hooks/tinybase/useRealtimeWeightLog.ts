@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 export function useRealtimeWeightLog() {
   const [weightLog, setWeightLog] = useState<I_WeightLog[]>([]);
+  const [historyLog, setHistoryLog] = useState<I_WeightLog[]>([]);
 
   useEffect(() => {
     if (!store) return;
@@ -19,7 +20,8 @@ export function useRealtimeWeightLog() {
           (a, b) => new Date(b.id).getTime() - new Date(a.id).getTime()
         );
 
-        setWeightLog(sorted);
+        setWeightLog(flattened);
+        setHistoryLog(sorted);
       }
     };
 
@@ -38,5 +40,5 @@ export function useRealtimeWeightLog() {
     };
   }, [store]);
 
-  return { weightLog };
+  return { weightLog, historyLog };
 }

@@ -15,7 +15,7 @@ export default function IndexScreen() {
   const secondaryText = useThemeColor({}, "secondaryText");
   const backgroundColor = useThemeColor({}, "background");
 
-  const { weightLog } = useRealtimeWeightLog();
+  const { weightLog, historyLog } = useRealtimeWeightLog();
 
   return (
     <ThemedView className="p-4 flex-1 flex-col gap-4">
@@ -197,9 +197,9 @@ export default function IndexScreen() {
               borderRadius: 12,
             }}
           >
-            {weightLog && weightLog.length > 0 ? (
+            {historyLog && historyLog.length > 0 ? (
               <View className="flex flex-col gap-2">
-                {weightLog.map((log, index) => (
+                {historyLog.map((log, index) => (
                   <View
                     style={{
                       backgroundColor,
@@ -218,8 +218,8 @@ export default function IndexScreen() {
                           name="show-chart"
                           size={32}
                           className={
-                            weightLog[index - 1] &&
-                            weightLog[index - 1].weight < log.weight
+                            historyLog[index - 1] &&
+                            historyLog[index - 1].weight < log.weight
                               ? "!text-green-500"
                               : "!text-red-500"
                           }
