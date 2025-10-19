@@ -3,24 +3,16 @@ import { ThemedLoadingButton } from "@/components/ui/ThemedLoadingButton";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { store } from "@/lib/tinybase";
-import WheelPicker from "@quidone/react-native-wheel-picker";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { View } from "react-native";
+import { RulerPicker } from "react-native-ruler-picker";
 
 export default function AddScreen() {
   const textColor = useThemeColor({}, "text");
   const secondaryText = useThemeColor({}, "secondaryText");
   const [value, setValue] = useState(0);
   const [description, setDescription] = useState<string | null>(null);
-
-  const data = [...Array(501).keys()].map((index) => {
-    const value = (index * 0.5).toFixed(1); // 0.0, 0.5, 1.0, 1.5, ...
-    return {
-      value: parseFloat(value),
-      label: `${value} kg`,
-    };
-  });
 
   const handleAddWeight = () => {
     store.addRow("weight_log", {
@@ -32,16 +24,37 @@ export default function AddScreen() {
     router.back();
   };
 
+  const handleValueChange = (numberString: string) => {
+    const number = parseFloat(numberString);
+    setValue(number);
+  };
+
   return (
     <ThemedView className="flex-1 p-4 gap-2">
       <View className="flex-1 justify-center">
-        <WheelPicker
-          data={data}
-          value={value}
-          onValueChanged={({ item: { value } }) => setValue(value)}
-          enableScrollByTapOnItem={true}
-          itemTextStyle={{ color: textColor, fontSize: 32, fontWeight: 900 }}
-          overlayItemStyle={{ backgroundColor: secondaryText }}
+        <RulerPicker
+          unitTextStyle={{
+            color: textColor,
+            fontWeight: 900,
+          }}
+          valueTextStyle={{
+            color: textColor,
+            fontWeight: 900,
+          }}
+          min={0}
+          max={250}
+          step={0.1}
+          fractionDigits={1}
+          initialValue={0}
+          onValueChange={handleValueChange}
+          unit="kg"
+          height={70}
+          indicatorHeight={68}
+          indicatorColor={textColor}
+          stepWidth={2}
+          shortStepColor={secondaryText}
+          longStepColor={textColor}
+          longStepHeight={32}
         />
       </View>
 

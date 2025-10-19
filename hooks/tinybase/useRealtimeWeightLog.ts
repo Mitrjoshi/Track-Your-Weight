@@ -1,7 +1,7 @@
 import { I_WeightLog } from "@/interface";
 import { store } from "@/lib/tinybase";
 import { flattenTable } from "@/utils/flattenTable";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export function useRealtimeWeightLog() {
   const [weightLog, setWeightLog] = useState<I_WeightLog[]>([]);
@@ -15,13 +15,14 @@ export function useRealtimeWeightLog() {
       if (table) {
         const flattened = flattenTable(table) as unknown as I_WeightLog[];
 
-        // ✅ sort descending by created_at (latest first)
-        const sorted = flattened.sort(
-          (a, b) => new Date(b.id).getTime() - new Date(a.id).getTime()
+        // Sort by id (string date)
+        const sortedAsc = [...flattened].sort(
+          (a, b) => new Date(a.id).getTime() - new Date(b.id).getTime()
         );
+        const sortedDesc = [...sortedAsc].reverse();
 
-        setWeightLog(flattened);
-        setHistoryLog(sorted);
+        setWeightLog(sortedAsc);
+        setHistoryLog(sortedDesc);
       }
     };
 
@@ -40,5 +41,16 @@ export function useRealtimeWeightLog() {
     };
   }, [store]);
 
-  return { weightLog, historyLog };
+  // derived values
+  const firstLog = useMemo(() => weightLog[0] ?? null, [weightLog]);
+  const lastLog = useMemo(
+    () => weightLog[weightLog.length - 1] ?? null,
+    [weightLog]
+  );
+  const weightDifference = useMemo(() => {
+    if (!firstLog || !lastLog) return null;
+    return parseFloat((lastLog.weight - firstLog.weight).toFixed(1));
+  }, [firstLog, lastLog]);
+
+  return { weightLog, historyLog, firstLog, lastLog, weightDifference };
 }

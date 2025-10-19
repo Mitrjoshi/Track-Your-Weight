@@ -4,7 +4,7 @@ import { ThemedView } from "@/components/ui/ThemedView";
 import { useRealtimeWeightLog } from "@/hooks/tinybase/useRealtimeWeightLog";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { formatDate } from "@/utils/formatDates";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import React from "react";
 import { ScrollView, View } from "react-native";
@@ -15,7 +15,7 @@ export default function IndexScreen() {
   const secondaryText = useThemeColor({}, "secondaryText");
   const backgroundColor = useThemeColor({}, "background");
 
-  const { weightLog, historyLog } = useRealtimeWeightLog();
+  const { weightLog, weightDifference, historyLog } = useRealtimeWeightLog();
 
   return (
     <ThemedView className="p-4 flex-1 flex-col gap-4">
@@ -33,55 +33,62 @@ export default function IndexScreen() {
           <View className="w-full flex-row items-center justify-between">
             <ThemedText className="text-2xl font-bold">Weight</ThemedText>
 
-            {/* <View
-              style={{
-                elevation: 5,
-                backgroundColor: `${secondaryText}30`,
-                borderRadius: 8,
-                padding: 4,
-                borderWidth: 1,
-                borderColor,
-              }}
-              className="flex items-center flex-row gap-1"
-            >
-              <MaterialIcons
-                name="show-chart"
-                size={18}
-                className="!text-green-500"
-              />
-              <ThemedText className="font-bold text-sm !text-green-500">
-                0.5 kg
-              </ThemedText>
-            </View> */}
-
-            <Link
-              style={{
-                elevation: 5,
-                backgroundColor: `${secondaryText}30`,
-                borderRadius: 8,
-                padding: 4,
-                borderWidth: 1,
-                borderColor,
-                paddingHorizontal: 12,
-              }}
-              href="/(tabs)/add"
-            >
-              <ThemedText className="font-semibold">Add</ThemedText>
-            </Link>
+            {weightDifference ? (
+              <View
+                style={{
+                  elevation: 5,
+                  backgroundColor: `${secondaryText}30`,
+                  borderRadius: 8,
+                  padding: 4,
+                  borderWidth: 1,
+                  borderColor,
+                }}
+                className="flex items-center flex-row gap-1"
+              >
+                <MaterialIcons
+                  name="show-chart"
+                  size={18}
+                  className={
+                    weightDifference < 0
+                      ? "!text-red-500 rotate-90"
+                      : "!text-green-500"
+                  }
+                />
+                <ThemedText
+                  className={`font-bold text-sm ${
+                    weightDifference < 0 ? "!text-red-500" : "!text-green-500"
+                  }`}
+                >
+                  {weightDifference} kg
+                </ThemedText>
+              </View>
+            ) : (
+              <Link
+                style={{
+                  elevation: 5,
+                  backgroundColor: `${secondaryText}30`,
+                  borderRadius: 8,
+                  padding: 4,
+                  borderWidth: 1,
+                  borderColor,
+                  paddingHorizontal: 12,
+                }}
+                href="/(tabs)/add"
+              >
+                <ThemedText className="font-semibold">Add</ThemedText>
+              </Link>
+            )}
           </View>
 
-          <View
-            style={{
-              borderRadius: 12,
-              // backgroundColor: backgroundColor,
-              // elevation: 5,
-              overflow: "hidden",
-            }}
-          >
+          <View>
             {weightLog && weightLog.length > 0 ? (
               <View
                 style={{
                   paddingTop: 28,
+                  borderRadius: 12,
+                  backgroundColor: backgroundColor,
+                  elevation: 5,
+                  overflow: "hidden",
                 }}
               >
                 <LineChart
@@ -124,7 +131,7 @@ export default function IndexScreen() {
                 borderColor,
                 paddingHorizontal: 12,
               }}
-              href="/(tabs)/add"
+              href="/goal"
             >
               <ThemedText className="font-semibold">Add Goal</ThemedText>
             </Link>
@@ -163,7 +170,7 @@ export default function IndexScreen() {
                 borderColor,
                 paddingHorizontal: 12,
               }}
-              href="/(tabs)/add"
+              href="/bmi"
             >
               <ThemedText className="font-semibold">Calculate</ThemedText>
             </Link>
@@ -209,17 +216,22 @@ export default function IndexScreen() {
                   >
                     <View>
                       <View
-                        className="w-12 h-12 flex justify-center items-center aspect-square rounded-lg"
+                        className="w-12 h-12 flex justify-center items-center aspect-square rounded-md"
                         style={{
                           backgroundColor: borderColor,
                         }}
                       >
-                        <MaterialIcons
-                          name="show-chart"
-                          size={32}
+                        <Feather
+                          name={
+                            historyLog[index + 1] &&
+                            historyLog[index + 1].weight < log.weight
+                              ? "trending-up"
+                              : "trending-down"
+                          }
+                          size={26}
                           className={
-                            historyLog[index - 1] &&
-                            historyLog[index - 1].weight < log.weight
+                            historyLog[index + 1] &&
+                            historyLog[index + 1].weight < log.weight
                               ? "!text-green-500"
                               : "!text-red-500"
                           }
@@ -229,7 +241,14 @@ export default function IndexScreen() {
 
                     <View className="flex-1 w-full">
                       <View className="flex items-center flex-row justify-between w-full">
-                        <ThemedText className="text-xl font-bold">
+                        <ThemedText
+                          className={`text-xl font-bold ${
+                            historyLog[index + 1] &&
+                            historyLog[index + 1].weight < log.weight
+                              ? "!text-green-500"
+                              : "!text-red-500"
+                          }`}
+                        >
                           {log.weight} Kg
                         </ThemedText>
                         <ThemedText
