@@ -48,12 +48,24 @@ export default function RootLayout() {
           name="goal"
           options={{
             headerShown: true,
+            headerShadowVisible: false,
+            title: "Goal",
+            headerTitleStyle: {
+              fontSize: 32,
+              fontWeight: 900,
+            },
           }}
         />
         <Stack.Screen
           name="bmi"
           options={{
             headerShown: true,
+            headerShadowVisible: false,
+            title: "BMI",
+            headerTitleStyle: {
+              fontSize: 32,
+              fontWeight: 900,
+            },
           }}
         />
       </Stack>

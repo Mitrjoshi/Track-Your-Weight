@@ -1,5 +1,6 @@
 import { COLORS } from "@/constants/theme";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { formatDate } from "@/utils/formatDates";
 import React, { useRef, useState } from "react";
 import { Dimensions, Text, View } from "react-native";
 import { LineChart as LINECHART } from "react-native-chart-kit";
@@ -26,6 +27,7 @@ export default function LineChart({ data }: { data: LineChartData }) {
       withInnerLines={true}
       withVerticalLines={false}
       transparent
+      withVerticalLabels={false}
       chartConfig={{
         decimalPlaces: 1,
         color: () => COLORS.customPrimary,
@@ -58,6 +60,7 @@ export default function LineChart({ data }: { data: LineChartData }) {
       renderDotContent={({ x, y, index }) => {
         if (selectedIndex === index) {
           const value = data.datasets[0].data[index];
+          const label = data.labels[index];
           const tooltipWidth = 70; // estimated tooltip width
 
           const adjustedLeft =
@@ -72,7 +75,6 @@ export default function LineChart({ data }: { data: LineChartData }) {
                 position: "absolute",
                 top: y - 40,
                 left: adjustedLeft,
-                elevation: 5,
                 backgroundColor: cardColor,
                 borderRadius: 8,
                 paddingHorizontal: 8,
@@ -90,6 +92,15 @@ export default function LineChart({ data }: { data: LineChartData }) {
                 }}
               >
                 {value} kg
+              </Text>
+              <Text
+                style={{
+                  color: borderColor,
+                  fontWeight: "700",
+                  fontSize: 12,
+                }}
+              >
+                {formatDate(new Date(Number(label)))}
               </Text>
             </View>
           );

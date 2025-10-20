@@ -37,8 +37,20 @@ export const formatDay = (input: Date): string => {
 };
 
 // Format full date (e.g. Today, Yesterday, or August 2, 2025)
-export const formatDate = (dateInput: Date | string): string => {
-  const date = typeof dateInput === "string" ? parseISO(dateInput) : dateInput;
+export const formatDate = (dateInput: Date | string | number): string => {
+  let date: Date;
+
+  if (typeof dateInput === "number") {
+    // number → convert timestamp (in ms) to Date
+    date = new Date(dateInput);
+  } else if (typeof dateInput === "string") {
+    // string → parse as ISO string
+    date = parseISO(dateInput);
+  } else {
+    // already a Date
+    date = dateInput;
+  }
+
   if (!isValid(date)) return "Invalid Date";
 
   return format(date, "MMM d, yyyy");

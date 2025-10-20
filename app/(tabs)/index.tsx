@@ -1,11 +1,15 @@
+import { BMIGauge } from "@/components/BMIGauge";
 import LineChart from "@/components/LineChart";
+import ProgressBar from "@/components/ProgressBar";
+import { ThemedLoadingButton } from "@/components/ui/ThemedLoadingButton";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { useRealtimeWeightLog } from "@/hooks/tinybase/useRealtimeWeightLog";
 import { useThemeColor } from "@/hooks/useThemeColor";
+import { I_WeightLog } from "@/interface";
 import { formatDate } from "@/utils/formatDates";
-import { Feather, MaterialIcons } from "@expo/vector-icons";
-import { Link } from "expo-router";
+import { Feather } from "@expo/vector-icons";
+import { Link, router } from "expo-router";
 import React from "react";
 import { ScrollView, View } from "react-native";
 
@@ -13,9 +17,27 @@ export default function IndexScreen() {
   const cardColor = useThemeColor({}, "menu");
   const borderColor = useThemeColor({}, "input");
   const secondaryText = useThemeColor({}, "secondaryText");
+  const textColor = useThemeColor({}, "text");
   const backgroundColor = useThemeColor({}, "background");
 
-  const { weightLog, weightDifference, historyLog } = useRealtimeWeightLog();
+  const {
+    weightLog,
+    weightDifference,
+    historyLog,
+    latestBMIValue,
+    latestGoal,
+    goalLeft,
+  } = useRealtimeWeightLog();
+
+  const handleWeightColor = (weightLog: I_WeightLog, log: I_WeightLog) => {
+    return weightLog
+      ? weightLog.weight < log.weight
+        ? "!text-green-500"
+        : weightLog.weight === log.weight
+        ? "!text-yellow-500"
+        : "!text-red-500"
+      : "!text-yellow-500";
+  };
 
   return (
     <ThemedView className="p-4 flex-1 flex-col gap-4">
@@ -31,29 +53,40 @@ export default function IndexScreen() {
           }}
         >
           <View className="w-full flex-row items-center justify-between">
-            <ThemedText className="text-2xl font-bold">Weight</ThemedText>
+            <View>
+              <ThemedText className="text-2xl font-bold">Weight</ThemedText>
+              {goalLeft && (
+                <ThemedText
+                  style={{
+                    color: secondaryText,
+                  }}
+                  className="text-sm font-medium"
+                >
+                  {goalLeft?.toFixed(1)} kgs left to reach your goal.
+                </ThemedText>
+              )}
+            </View>
 
             {weightDifference ? (
               <View
                 style={{
-                  elevation: 5,
-                  backgroundColor: `${secondaryText}30`,
+                  backgroundColor,
                   borderRadius: 8,
-                  padding: 4,
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
                   borderWidth: 1,
                   borderColor,
                 }}
-                className="flex items-center flex-row gap-1"
+                className="flex items-center flex-row gap-3"
               >
-                <MaterialIcons
-                  name="show-chart"
+                <Feather
+                  name={weightDifference > 0 ? "trending-up" : "trending-down"}
                   size={18}
                   className={
-                    weightDifference < 0
-                      ? "!text-red-500 rotate-90"
-                      : "!text-green-500"
+                    weightDifference < 0 ? "!text-red-500" : "!text-green-500"
                   }
                 />
+
                 <ThemedText
                   className={`font-bold text-sm ${
                     weightDifference < 0 ? "!text-red-500" : "!text-green-500"
@@ -65,13 +98,12 @@ export default function IndexScreen() {
             ) : (
               <Link
                 style={{
-                  elevation: 5,
-                  backgroundColor: `${secondaryText}30`,
+                  backgroundColor,
                   borderRadius: 8,
-                  padding: 4,
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
                   borderWidth: 1,
                   borderColor,
-                  paddingHorizontal: 12,
                 }}
                 href="/(tabs)/add"
               >
@@ -87,13 +119,12 @@ export default function IndexScreen() {
                   paddingTop: 28,
                   borderRadius: 12,
                   backgroundColor: backgroundColor,
-                  elevation: 5,
                   overflow: "hidden",
                 }}
               >
                 <LineChart
                   data={{
-                    labels: [],
+                    labels: weightLog.map((log) => String(log.id)),
                     datasets: [
                       {
                         data: weightLog.map((log) => log.weight),
@@ -123,13 +154,12 @@ export default function IndexScreen() {
 
             <Link
               style={{
-                elevation: 5,
-                backgroundColor: `${secondaryText}30`,
+                backgroundColor,
                 borderRadius: 8,
-                padding: 4,
+                paddingHorizontal: 12,
+                paddingVertical: 6,
                 borderWidth: 1,
                 borderColor,
-                paddingHorizontal: 12,
               }}
               href="/goal"
             >
@@ -143,11 +173,24 @@ export default function IndexScreen() {
               overflow: "hidden",
             }}
           >
-            <View className="p-5 flex justify-center items-center">
-              <ThemedText className="font-semibold">
-                No data available.
-              </ThemedText>
-            </View>
+            {latestGoal ? (
+              <View
+                className="p-4"
+                style={{
+                  borderRadius: 12,
+                  backgroundColor: backgroundColor,
+                  overflow: "hidden",
+                }}
+              >
+                <ProgressBar weight={historyLog[0].weight} goal={latestGoal} />
+              </View>
+            ) : (
+              <View className="p-5 flex justify-center items-center">
+                <ThemedText className="font-semibold">
+                  No data available.
+                </ThemedText>
+              </View>
+            )}
           </View>
         </View>
 
@@ -162,13 +205,12 @@ export default function IndexScreen() {
 
             <Link
               style={{
-                elevation: 5,
-                backgroundColor: `${secondaryText}30`,
+                backgroundColor,
                 borderRadius: 8,
-                padding: 4,
+                paddingHorizontal: 12,
+                paddingVertical: 6,
                 borderWidth: 1,
                 borderColor,
-                paddingHorizontal: 12,
               }}
               href="/bmi"
             >
@@ -181,11 +223,15 @@ export default function IndexScreen() {
               borderRadius: 12,
             }}
           >
-            <View className="p-5 flex justify-center items-center gap-2">
-              <ThemedText className="font-semibold">
-                No data available.
-              </ThemedText>
-            </View>
+            {latestBMIValue ? (
+              <BMIGauge bmi={latestBMIValue} />
+            ) : (
+              <View className="p-5 flex justify-center items-center gap-2">
+                <ThemedText className="font-semibold">
+                  No data available.
+                </ThemedText>
+              </View>
+            )}
           </View>
         </View>
 
@@ -206,7 +252,7 @@ export default function IndexScreen() {
           >
             {historyLog && historyLog.length > 0 ? (
               <View className="flex flex-col gap-2">
-                {historyLog.map((log, index) => (
+                {historyLog.slice(0, 5).map((log, index) => (
                   <View
                     style={{
                       backgroundColor,
@@ -223,18 +269,19 @@ export default function IndexScreen() {
                       >
                         <Feather
                           name={
-                            historyLog[index + 1] &&
-                            historyLog[index + 1].weight < log.weight
-                              ? "trending-up"
-                              : "trending-down"
+                            historyLog[index + 1]
+                              ? historyLog[index + 1].weight < log.weight
+                                ? "trending-up"
+                                : historyLog[index + 1].weight === log.weight
+                                ? "minus"
+                                : "trending-down"
+                              : "minus"
                           }
                           size={26}
-                          className={
-                            historyLog[index + 1] &&
-                            historyLog[index + 1].weight < log.weight
-                              ? "!text-green-500"
-                              : "!text-red-500"
-                          }
+                          className={handleWeightColor(
+                            historyLog[index + 1],
+                            log
+                          )}
                         />
                       </View>
                     </View>
@@ -242,12 +289,10 @@ export default function IndexScreen() {
                     <View className="flex-1 w-full">
                       <View className="flex items-center flex-row justify-between w-full">
                         <ThemedText
-                          className={`text-xl font-bold ${
-                            historyLog[index + 1] &&
-                            historyLog[index + 1].weight < log.weight
-                              ? "!text-green-500"
-                              : "!text-red-500"
-                          }`}
+                          style={{
+                            color: textColor,
+                          }}
+                          className={`text-xl font-bold`}
                         >
                           {log.weight} Kg
                         </ThemedText>
@@ -260,22 +305,46 @@ export default function IndexScreen() {
                           {formatDate(new Date(log.id))}
                         </ThemedText>
                       </View>
-                      {log.description && (
-                        <View>
-                          <ThemedText
-                            numberOfLines={1}
-                            ellipsizeMode="tail"
-                            style={{
-                              color: secondaryText,
-                            }}
-                          >
-                            {log.description}
-                          </ThemedText>
-                        </View>
-                      )}
+                      <View>
+                        <ThemedText
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                          style={{
+                            color: secondaryText,
+                          }}
+                          className={`${handleWeightColor(
+                            historyLog[index + 1],
+                            log
+                          )}`}
+                        >
+                          {!historyLog[index + 1] && "No change"}
+
+                          {historyLog[index + 1] &&
+                            historyLog[index + 1].weight < log.weight &&
+                            "Increased"}
+
+                          {historyLog[index + 1] &&
+                            historyLog[index + 1].weight > log.weight &&
+                            "Decreased"}
+
+                          {historyLog[index + 1] &&
+                            historyLog[index + 1].weight === log.weight &&
+                            "No change"}
+                        </ThemedText>
+                      </View>
                     </View>
                   </View>
                 ))}
+
+                {historyLog.length > 5 && (
+                  <ThemedLoadingButton
+                    isLoading={false}
+                    onPress={() => {
+                      router.navigate("/(tabs)/details");
+                    }}
+                    text="See all"
+                  />
+                )}
               </View>
             ) : (
               <View className="p-5 flex justify-center items-center gap-2">

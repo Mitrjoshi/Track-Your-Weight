@@ -1,4 +1,3 @@
-import { ThemedInput } from "@/components/ui/ThemedInput";
 import { ThemedLoadingButton } from "@/components/ui/ThemedLoadingButton";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -12,13 +11,11 @@ export default function AddScreen() {
   const textColor = useThemeColor({}, "text");
   const secondaryText = useThemeColor({}, "secondaryText");
   const [value, setValue] = useState(0);
-  const [description, setDescription] = useState<string | null>(null);
 
   const handleAddWeight = () => {
     store.addRow("weight_log", {
       id: Date.now(),
       weight: value,
-      description: description as string,
     });
 
     router.back();
@@ -36,10 +33,12 @@ export default function AddScreen() {
           unitTextStyle={{
             color: textColor,
             fontWeight: 900,
+            fontSize: 44,
           }}
           valueTextStyle={{
             color: textColor,
             fontWeight: 900,
+            fontSize: 44,
           }}
           min={0}
           max={250}
@@ -49,20 +48,12 @@ export default function AddScreen() {
           onValueChange={handleValueChange}
           unit="kg"
           height={70}
-          indicatorHeight={68}
+          indicatorHeight={90}
           indicatorColor={textColor}
           stepWidth={2}
           shortStepColor={secondaryText}
           longStepColor={textColor}
           longStepHeight={32}
-        />
-      </View>
-
-      <View className="!h-[45px]">
-        <ThemedInput
-          onChangeText={(e) => setDescription(e)}
-          placeholder="Description (optional)"
-          className="!h-[45px] px-4 rounded-md w-full"
         />
       </View>
 

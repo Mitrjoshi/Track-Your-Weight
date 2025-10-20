@@ -23,7 +23,7 @@ export const Colors = {
     primary: "#009eff",
     text: "#11181C",
     background: "#fff",
-    menu: "#f9f9f9",
+    menu: "#f0f0f0",
     icon: "#000",
     input: "#f0f0f0",
     button: "#000",
