@@ -6,7 +6,9 @@ import { useEffect, useMemo, useState } from "react";
 export function useRealtimeWeightLog() {
   const [weightLog, setWeightLog] = useState<I_WeightLog[]>([]);
   const [bmiLog, setBMILog] = useState<I_BMI[]>([]);
-  const [goalLog, setGoalLog] = useState<{ id: number; value: number }[]>([]);
+  const [goalLog, setGoalLog] = useState<
+    { created_at: string; value: number }[]
+  >([]);
 
   // --- Weight listener ---
   useEffect(() => {
@@ -16,11 +18,30 @@ export function useRealtimeWeightLog() {
       const table = store.getTable("weight_log");
       if (!table) return;
 
-      const flattened = flattenTable(table) as unknown as I_WeightLog[];
-      const sortedAsc = [...flattened].sort(
-        (a, b) => a.timestamp - b.timestamp
+      const flattened = flattenTable(table) as unknown as (I_WeightLog & {
+        created_at?: string;
+      })[];
+
+      const withCreatedAt = flattened.map((log) => ({
+        ...log,
+        created_at: log.created_at ?? log.id ?? new Date().toISOString(),
+      }));
+
+      const sortedAsc = [...withCreatedAt].sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
       );
       setWeightLog(sortedAsc);
+
+      // 🧩 If no weights exist, delete all BMI rows
+      if (sortedAsc.length === 0) {
+        const bmiTable = store.getTable("bmi");
+        if (bmiTable) {
+          Object.keys(bmiTable).forEach((rowId) => {
+            store.delRow("bmi", rowId);
+          });
+        }
+      }
     };
 
     loadWeights();
@@ -39,7 +60,10 @@ export function useRealtimeWeightLog() {
       if (!table) return;
 
       const flattened = flattenTable(table) as unknown as I_BMI[];
-      const sortedAsc = [...flattened].sort((a, b) => a.id - b.id);
+      const sortedAsc = [...flattened].sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      );
       setBMILog(sortedAsc);
     };
 
@@ -59,10 +83,13 @@ export function useRealtimeWeightLog() {
       if (!table) return;
 
       const flattened = flattenTable(table) as unknown as {
-        id: number;
+        created_at: string;
         value: number;
       }[];
-      const sortedAsc = [...flattened].sort((a, b) => a.id - b.id);
+      const sortedAsc = [...flattened].sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      );
       setGoalLog(sortedAsc);
     };
 
@@ -79,10 +106,12 @@ export function useRealtimeWeightLog() {
     () => weightLog[weightLog.length - 1] ?? null,
     [weightLog]
   );
+
   const weightDifference = useMemo(() => {
     if (!firstLog || !lastLog) return null;
     return parseFloat((lastLog.weight - firstLog.weight).toFixed(1));
   }, [firstLog, lastLog]);
+
   const historyLog = useMemo(() => [...weightLog].reverse(), [weightLog]);
 
   // --- Latest BMI log ---
@@ -91,11 +120,10 @@ export function useRealtimeWeightLog() {
     [bmiLog]
   );
 
-  // --- Compute BMI from latest weight log or latest BMI log ---
+  // --- Compute BMI from latest weight or BMI log ---
   const latestBMIValue = useMemo(() => {
     const weight = lastLog?.weight ?? latestBMILog?.weight;
     const height = latestBMILog?.height;
-
     if (!weight || !height) return null;
 
     return parseFloat((weight / (height / 100) ** 2).toFixed(2));
@@ -121,6 +149,6 @@ export function useRealtimeWeightLog() {
     // Goal
     goalLog,
     latestGoal,
-    goalLeft: latestGoal ? latestGoal - historyLog[0].weight : null,
+    goalLeft: latestGoal ? latestGoal - (historyLog[0]?.weight ?? 0) : null,
   };
 }

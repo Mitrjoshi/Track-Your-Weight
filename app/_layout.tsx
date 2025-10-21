@@ -43,7 +43,31 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="index"
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: "Home",
+            headerBackVisible: false,
+            headerTitleStyle: {
+              fontSize: 32,
+              fontWeight: 900,
+            },
+          }}
+        />
+        <Stack.Screen
+          name="add"
+          options={{
+            headerShown: true,
+            headerShadowVisible: false,
+            title: "Goal",
+            headerTitleStyle: {
+              fontSize: 32,
+              fontWeight: 900,
+            },
+          }}
+        />
         <Stack.Screen
           name="goal"
           options={{

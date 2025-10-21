@@ -32,7 +32,7 @@ export default function BMIScreen() {
 
   const handleCalculatePress = () => {
     store.addRow("bmi", {
-      id: new Date().getTime(),
+      created_at: new Date().getTime(),
       height: value,
       weight: weight,
       age: age,
@@ -40,7 +40,7 @@ export default function BMIScreen() {
     });
 
     store.addRow("weight_log", {
-      id: Date.now(),
+      created_at: new Date().toISOString(),
       weight: weight,
     });
 

@@ -1,6 +1,7 @@
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { COLORS } from "@/constants/theme";
+import { useRealtimeWeightLog } from "@/hooks/tinybase/useRealtimeWeightLog";
 import { store } from "@/lib/tinybase";
 import { router, Stack } from "expo-router";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
@@ -79,6 +80,8 @@ export default function GoalPage() {
   const CONTAINER_HEIGHT = ITEM_HEIGHT * VISIBLE_COUNT;
   const PADDING = (CONTAINER_HEIGHT - ITEM_HEIGHT) / 2;
 
+  const { latestGoal } = useRealtimeWeightLog();
+
   const numbers = useMemo(
     () => Array.from({ length: 120 }, (_, i) => i + 1),
     []
@@ -108,12 +111,35 @@ export default function GoalPage() {
     },
   });
 
+  useEffect(() => {
+    if (latestGoal == null) return;
+
+    const index = numbers.indexOf(latestGoal);
+    if (index === -1) return;
+
+    // Wait for scrollRef to be ready
+    const id = requestAnimationFrame(() => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollTo({
+          y: index * ITEM_HEIGHT,
+          animated: true,
+        });
+        scrollY.value = index * ITEM_HEIGHT;
+      }
+    });
+
+    return () => cancelAnimationFrame(id);
+  }, [latestGoal, ITEM_HEIGHT, numbers]);
+
   return (
     <ThemedView className="flex-1 items-center justify-center">
       <Stack.Screen
         options={{
           headerRight: () => (
             <Pressable
+              style={{
+                marginRight: 16,
+              }}
               onPress={() => {
                 store.addRow("goal_log", {
                   id: new Date().getTime(),
@@ -123,7 +149,14 @@ export default function GoalPage() {
                 router.back();
               }}
             >
-              <ThemedText className="font-bold">Add Goal</ThemedText>
+              <ThemedText
+                style={{
+                  color: COLORS.customPrimary,
+                }}
+                className="font-bold"
+              >
+                Add Goal
+              </ThemedText>
             </Pressable>
           ),
         }}

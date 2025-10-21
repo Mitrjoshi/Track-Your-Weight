@@ -1,10 +1,12 @@
 export interface I_WeightLog {
-  id: number;
+  created_at: string;
   timestamp: number;
   weight: number;
+  id: string;
 }
 export interface I_BMI {
-  id: number;
+  id: string;
+  created_at: string;
   height: number;
   weight: number;
   age: number;
