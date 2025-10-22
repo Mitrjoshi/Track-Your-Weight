@@ -4,14 +4,13 @@ import LineChart from "@/components/LineChart";
 import NoData from "@/components/NoData";
 import ProgressBar from "@/components/ProgressBar";
 import SmallButton from "@/components/SmallButton";
-import { ThemedLoadingButton } from "@/components/ui/ThemedLoadingButton";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { COLORS } from "@/constants/theme";
 import { useRealtimeWeightLog } from "@/hooks/tinybase/useRealtimeWeightLog";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Feather } from "@expo/vector-icons";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import { Plus } from "lucide-react-native";
 import React from "react";
 import { Pressable, ScrollView, View } from "react-native";
@@ -30,6 +29,7 @@ export default function IndexScreen() {
     latestBMIValue,
     latestGoal,
     goalLeft,
+    latestBMILog,
   } = useRealtimeWeightLog();
 
   return (
@@ -216,7 +216,7 @@ export default function IndexScreen() {
               >
                 {historyLog && historyLog.length > 0 ? (
                   <View className="flex flex-col gap-2">
-                    {historyLog.slice(0, 5).map((log, index) => (
+                    {historyLog.map((log, index) => (
                       <HistoryItem
                         historyLog={historyLog}
                         index={index}
@@ -224,16 +224,6 @@ export default function IndexScreen() {
                         key={index}
                       />
                     ))}
-
-                    {historyLog.length > 5 && (
-                      <ThemedLoadingButton
-                        isLoading={false}
-                        onPress={() => {
-                          router.navigate("/details");
-                        }}
-                        text="See all"
-                      />
-                    )}
                   </View>
                 ) : (
                   <NoData />
@@ -251,7 +241,7 @@ export default function IndexScreen() {
           }}
           className="absolute bottom-6 right-6 h-16 w-16 rounded-full flex justify-center items-center"
         >
-          <Plus color={textColor} strokeWidth={2} size={32} />
+          <Plus color="white" strokeWidth={2} size={32} />
         </Pressable>
       </Link>
     </ThemedView>

@@ -2,6 +2,7 @@ import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { COLORS } from "@/constants/theme";
 import { useRealtimeWeightLog } from "@/hooks/tinybase/useRealtimeWeightLog";
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { store } from "@/lib/tinybase";
 import { router, Stack } from "expo-router";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
@@ -80,6 +81,8 @@ export default function GoalPage() {
   const CONTAINER_HEIGHT = ITEM_HEIGHT * VISIBLE_COUNT;
   const PADDING = (CONTAINER_HEIGHT - ITEM_HEIGHT) / 2;
 
+  const textColor = useThemeColor({}, "text");
+
   const { latestGoal } = useRealtimeWeightLog();
 
   const numbers = useMemo(
@@ -137,9 +140,6 @@ export default function GoalPage() {
         options={{
           headerRight: () => (
             <Pressable
-              style={{
-                marginRight: 16,
-              }}
               onPress={() => {
                 store.addRow("goal_log", {
                   id: new Date().getTime(),
@@ -193,11 +193,29 @@ export default function GoalPage() {
 
         <View
           pointerEvents="none"
-          style={[styles.highlightLine, { left: 0, width: "10%" }]}
+          style={[
+            {
+              top: "50%",
+              position: "absolute",
+              height: 5,
+              backgroundColor: textColor,
+              marginTop: -2.5,
+            },
+            { left: 0, width: "10%" },
+          ]}
         />
         <View
           pointerEvents="none"
-          style={[styles.highlightLine, { right: 0, width: "10%" }]}
+          style={[
+            {
+              top: "50%",
+              position: "absolute",
+              height: 5,
+              backgroundColor: textColor,
+              marginTop: -2.5,
+            },
+            { right: 0, width: "10%" },
+          ]}
         />
       </View>
     </ThemedView>
@@ -207,11 +225,4 @@ export default function GoalPage() {
 const styles = StyleSheet.create({
   pickerContainer: { overflow: "hidden" },
   numberText: { fontWeight: "700", textAlign: "center" },
-  highlightLine: {
-    top: "50%",
-    position: "absolute",
-    height: 2,
-    backgroundColor: "white",
-    marginTop: -1,
-  },
 });

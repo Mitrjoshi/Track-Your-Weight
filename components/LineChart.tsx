@@ -61,7 +61,7 @@ export default function LineChart({ data }: { data: LineChartData }) {
         if (selectedIndex === index) {
           const value = data.datasets[0].data[index];
           const label = data.labels[index];
-          const tooltipWidth = 70; // estimated tooltip width
+          const tooltipWidth = 90; // estimated tooltip width
 
           const adjustedLeft =
             x + tooltipWidth > chartWidth

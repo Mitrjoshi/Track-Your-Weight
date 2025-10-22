@@ -20,6 +20,7 @@ export default function AddScreen() {
   const handleAddWeight = () => {
     if (id !== undefined) {
       store.setRow("weight_log", String(id), {
+        created_at: new Date().toISOString(),
         weight: value,
       });
     } else {

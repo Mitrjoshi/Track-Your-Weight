@@ -4,6 +4,7 @@ import { deleteTables, store } from "@/lib/tinybase";
 import { formatDate } from "@/utils/formatDates";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
+import { Info } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import { Pressable, View } from "react-native";
 import Animated, {
@@ -68,7 +69,7 @@ export default function HistoryItem({
       {/* Header (pressable area) */}
       <Pressable
         onPress={toggle}
-        className="p-2 flex-row items-center justify-start"
+        className="p-2 flex-row gap-2 items-center justify-start"
         style={{
           backgroundColor,
         }}
@@ -96,8 +97,8 @@ export default function HistoryItem({
           </View>
         </View>
 
-        <View className="flex-1 w-full ml-2">
-          <View className="flex items-center flex-row justify-between w-full">
+        <View className="flex flex-1 items-center flex-row justify-between w-full">
+          <View>
             <ThemedText
               style={{
                 color: textColor,
@@ -106,16 +107,6 @@ export default function HistoryItem({
             >
               {log.weight} Kg
             </ThemedText>
-            <ThemedText
-              className="text-xs font-semibold"
-              style={{
-                color: secondaryText,
-              }}
-            >
-              {formatDate(new Date(log.created_at))}
-            </ThemedText>
-          </View>
-          <View>
             <ThemedText
               numberOfLines={1}
               ellipsizeMode="tail"
@@ -135,6 +126,17 @@ export default function HistoryItem({
                 historyLog[index + 1].weight === log.weight &&
                 "No change"}
             </ThemedText>
+          </View>
+          <View className="flex flex-col gap-2 justify-center items-end">
+            <ThemedText
+              className="text-xs font-semibold"
+              style={{
+                color: secondaryText,
+              }}
+            >
+              {formatDate(new Date(log.created_at))}
+            </ThemedText>
+            <Info size={16} color={secondaryText} />
           </View>
         </View>
       </Pressable>

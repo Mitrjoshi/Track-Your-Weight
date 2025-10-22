@@ -16,7 +16,10 @@ export function useRealtimeWeightLog() {
 
     const loadWeights = () => {
       const table = store.getTable("weight_log");
-      if (!table) return;
+      if (!table) {
+        setWeightLog([]);
+        return;
+      }
 
       const flattened = flattenTable(table) as unknown as (I_WeightLog & {
         created_at?: string;
@@ -31,9 +34,10 @@ export function useRealtimeWeightLog() {
         (a, b) =>
           new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
       );
+
       setWeightLog(sortedAsc);
 
-      // 🧩 If no weights exist, delete all BMI rows
+      // 🧩 If no weights exist, delete all BMI rows and clear BMI state
       if (sortedAsc.length === 0) {
         const bmiTable = store.getTable("bmi");
         if (bmiTable) {
@@ -41,6 +45,7 @@ export function useRealtimeWeightLog() {
             store.delRow("bmi", rowId);
           });
         }
+        setBMILog([]);
       }
     };
 
@@ -58,7 +63,11 @@ export function useRealtimeWeightLog() {
     const loadBMI = () => {
       const table = store.getTable("bmi");
       console.log("BMI TABLE UPDATED:", table);
-      if (!table) return;
+
+      if (!table) {
+        setBMILog([]);
+        return;
+      }
 
       const flattened = flattenTable(table) as unknown as I_BMI[];
       const sortedAsc = flattened.sort(
@@ -81,12 +90,16 @@ export function useRealtimeWeightLog() {
 
     const loadGoals = () => {
       const table = store.getTable("goal_log");
-      if (!table) return;
+      if (!table) {
+        setGoalLog([]);
+        return;
+      }
 
       const flattened = flattenTable(table) as unknown as {
         created_at: string;
         value: number;
       }[];
+
       const sortedAsc = [...flattened].sort(
         (a, b) =>
           new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
@@ -126,7 +139,6 @@ export function useRealtimeWeightLog() {
     const weight = lastLog?.weight ?? latestBMILog?.weight;
     const height = latestBMILog?.height;
     if (!weight || !height) return null;
-
     return parseFloat((weight / (height / 100) ** 2).toFixed(2));
   }, [lastLog, latestBMILog]);
 
@@ -143,10 +155,12 @@ export function useRealtimeWeightLog() {
     firstLog,
     lastLog,
     weightDifference,
+
     // BMI logs
     bmiLog,
     latestBMILog,
     latestBMIValue,
+
     // Goal
     goalLog,
     latestGoal,

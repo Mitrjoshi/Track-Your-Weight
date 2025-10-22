@@ -15,7 +15,7 @@ export default function BMIScreen() {
   const { lastLog, latestBMILog } = useRealtimeWeightLog();
 
   const [gender, setGender] = useState<"Male" | "Female">("Male");
-  const [weight, setWeight] = useState<number>(0);
+  const [weight, setWeight] = useState<number>(65);
   const [age, setAge] = useState<number>(19);
   const [value, setValue] = useState(165);
 
