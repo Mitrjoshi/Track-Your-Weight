@@ -1,6 +1,6 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { I_WeightLog } from "@/interface";
-import { store } from "@/lib/tinybase";
+import { deleteTables, store } from "@/lib/tinybase";
 import { formatDate } from "@/utils/formatDates";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -184,7 +184,7 @@ export default function HistoryItem({
                 store.delRow("weight_log", log.id);
 
                 if (historyLog.length === 1) {
-                  store.delTable("bmi_log");
+                  deleteTables();
                 }
               }}
               className="flex justify-center items-center rounded-lg"

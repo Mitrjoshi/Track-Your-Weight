@@ -57,10 +57,11 @@ export function useRealtimeWeightLog() {
 
     const loadBMI = () => {
       const table = store.getTable("bmi");
+      console.log("BMI TABLE UPDATED:", table);
       if (!table) return;
 
       const flattened = flattenTable(table) as unknown as I_BMI[];
-      const sortedAsc = [...flattened].sort(
+      const sortedAsc = flattened.sort(
         (a, b) =>
           new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
       );

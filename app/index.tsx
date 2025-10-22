@@ -134,103 +134,114 @@ export default function IndexScreen() {
           </View>
         </View>
 
-        <View
-          className="rounded-xl p-4 gap-4"
-          style={{
-            backgroundColor: cardColor,
-          }}
-        >
-          <View className="w-full flex-row items-center justify-between">
-            <ThemedText className="text-2xl font-bold">Progress</ThemedText>
+        {weightLog && weightLog.length > 0 && (
+          <>
+            <View
+              className="rounded-xl p-4 gap-4"
+              style={{
+                backgroundColor: cardColor,
+              }}
+            >
+              <View className="w-full flex-row items-center justify-between">
+                <ThemedText className="text-2xl font-bold">Progress</ThemedText>
 
-            <SmallButton route="/goal" text="Add Goal" />
-          </View>
+                <SmallButton route="/goal" text="Add Goal" />
+              </View>
 
-          <View
-            style={{
-              borderRadius: 12,
-              overflow: "hidden",
-            }}
-          >
-            {latestGoal ? (
               <View
-                className="p-4"
                 style={{
                   borderRadius: 12,
-                  backgroundColor: backgroundColor,
                   overflow: "hidden",
                 }}
               >
-                <ProgressBar weight={historyLog[0].weight} goal={latestGoal} />
-              </View>
-            ) : (
-              <NoData />
-            )}
-          </View>
-        </View>
-
-        <View
-          className="rounded-xl p-4 gap-4"
-          style={{
-            backgroundColor: cardColor,
-          }}
-        >
-          <View className="w-full flex-row items-center justify-between">
-            <ThemedText className="text-2xl font-bold">BMI</ThemedText>
-
-            <SmallButton route="/bmi" text="Calculate" />
-          </View>
-
-          <View
-            style={{
-              borderRadius: 12,
-            }}
-          >
-            {latestBMIValue ? <BMIGauge bmi={latestBMIValue} /> : <NoData />}
-          </View>
-        </View>
-
-        <View
-          className="rounded-xl p-4 gap-4"
-          style={{
-            backgroundColor: cardColor,
-          }}
-        >
-          <View className="w-full flex-row items-center justify-between">
-            <ThemedText className="text-2xl font-bold">History</ThemedText>
-          </View>
-
-          <View
-            style={{
-              borderRadius: 12,
-            }}
-          >
-            {historyLog && historyLog.length > 0 ? (
-              <View className="flex flex-col gap-2">
-                {historyLog.slice(0, 5).map((log, index) => (
-                  <HistoryItem
-                    historyLog={historyLog}
-                    index={index}
-                    log={log}
-                    key={index}
-                  />
-                ))}
-
-                {historyLog.length > 5 && (
-                  <ThemedLoadingButton
-                    isLoading={false}
-                    onPress={() => {
-                      router.navigate("/details");
+                {latestGoal ? (
+                  <View
+                    className="p-4"
+                    style={{
+                      borderRadius: 12,
+                      backgroundColor: backgroundColor,
+                      overflow: "hidden",
                     }}
-                    text="See all"
-                  />
+                  >
+                    <ProgressBar
+                      weight={historyLog[0].weight}
+                      goal={latestGoal}
+                    />
+                  </View>
+                ) : (
+                  <NoData />
                 )}
               </View>
-            ) : (
-              <NoData />
-            )}
-          </View>
-        </View>
+            </View>
+
+            <View
+              className="rounded-xl p-4 gap-4"
+              style={{
+                backgroundColor: cardColor,
+              }}
+            >
+              <View className="w-full flex-row items-center justify-between">
+                <ThemedText className="text-2xl font-bold">BMI</ThemedText>
+
+                <SmallButton route="/bmi" text="Calculate" />
+              </View>
+
+              <View
+                style={{
+                  borderRadius: 12,
+                }}
+              >
+                {latestBMIValue ? (
+                  <BMIGauge bmi={latestBMIValue} />
+                ) : (
+                  <NoData />
+                )}
+              </View>
+            </View>
+
+            <View
+              className="rounded-xl p-4 gap-4"
+              style={{
+                backgroundColor: cardColor,
+              }}
+            >
+              <View className="w-full flex-row items-center justify-between">
+                <ThemedText className="text-2xl font-bold">History</ThemedText>
+              </View>
+
+              <View
+                style={{
+                  borderRadius: 12,
+                }}
+              >
+                {historyLog && historyLog.length > 0 ? (
+                  <View className="flex flex-col gap-2">
+                    {historyLog.slice(0, 5).map((log, index) => (
+                      <HistoryItem
+                        historyLog={historyLog}
+                        index={index}
+                        log={log}
+                        key={index}
+                      />
+                    ))}
+
+                    {historyLog.length > 5 && (
+                      <ThemedLoadingButton
+                        isLoading={false}
+                        onPress={() => {
+                          router.navigate("/details");
+                        }}
+                        text="See all"
+                      />
+                    )}
+                  </View>
+                ) : (
+                  <NoData />
+                )}
+              </View>
+            </View>
+          </>
+        )}
       </ScrollView>
 
       <Link href={"/add"} asChild>

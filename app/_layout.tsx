@@ -61,7 +61,7 @@ export default function RootLayout() {
           options={{
             headerShown: true,
             headerShadowVisible: false,
-            title: "Goal",
+            title: "Add",
             headerTitleStyle: {
               fontSize: 32,
               fontWeight: 900,
