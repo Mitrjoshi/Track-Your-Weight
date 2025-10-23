@@ -57,8 +57,6 @@ export default function HistoryItem({
     };
   });
 
-  console.log(store.getTable("weight_log"));
-
   return (
     <View
       style={{
@@ -134,7 +132,7 @@ export default function HistoryItem({
                 color: secondaryText,
               }}
             >
-              {formatDate(new Date(log.created_at))}
+              {formatDate(log.created_at)}
             </ThemedText>
             <Info size={16} color={secondaryText} />
           </View>
@@ -163,6 +161,7 @@ export default function HistoryItem({
                   params: { id: log.id, value: log.weight },
                   pathname: "/add",
                 });
+                toggle();
               }}
               className="flex justify-center items-center rounded-lg"
             >
@@ -188,6 +187,7 @@ export default function HistoryItem({
                 if (historyLog.length === 1) {
                   deleteTables();
                 }
+                toggle();
               }}
               className="flex justify-center items-center rounded-lg"
             >

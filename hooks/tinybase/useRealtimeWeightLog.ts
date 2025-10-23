@@ -62,7 +62,6 @@ export function useRealtimeWeightLog() {
 
     const loadBMI = () => {
       const table = store.getTable("bmi");
-      console.log("BMI TABLE UPDATED:", table);
 
       if (!table) {
         setBMILog([]);

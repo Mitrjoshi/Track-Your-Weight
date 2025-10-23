@@ -100,7 +100,7 @@ export default function LineChart({ data }: { data: LineChartData }) {
                   fontSize: 12,
                 }}
               >
-                {formatDate(new Date(Number(label)))}
+                {formatDate(label)}
               </Text>
             </View>
           );

@@ -62,7 +62,7 @@ export default function AddScreen() {
             fontWeight: 900,
             fontSize: 44,
           }}
-          min={0}
+          min={15}
           max={250}
           step={0.1}
           fractionDigits={1}
