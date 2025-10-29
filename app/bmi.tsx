@@ -89,7 +89,7 @@ export default function BMIScreen() {
                 backgroundColor:
                   gender === "Male" ? COLORS.customPrimary : cardColor,
               }}
-              className="flex-1 w-full aspect-square rounded-lg flex flex-col justify-evenly items-center"
+              className="flex-1 w-full aspect-square gap-4 rounded-lg flex justify-center items-center"
             >
               <ThemedText
                 className="text-xl font-bold"
@@ -147,10 +147,10 @@ export default function BMIScreen() {
                 color: textColor,
                 fontWeight: 900,
               }}
-              min={0}
+              min={90}
               max={250}
               step={1}
-              fractionDigits={1}
+              fractionDigits={0}
               initialValue={value}
               onValueChange={handleValueChange}
               unit="cm"

@@ -20,7 +20,6 @@ export default function IndexScreen() {
   const borderColor = useThemeColor({}, "input");
   const backgroundColor = useThemeColor({}, "background");
   const secondaryText = useThemeColor({}, "secondaryText");
-  const textColor = useThemeColor({}, "text");
 
   const {
     weightLog,
@@ -29,7 +28,6 @@ export default function IndexScreen() {
     latestBMIValue,
     latestGoal,
     goalLeft,
-    latestBMILog,
   } = useRealtimeWeightLog();
 
   return (
@@ -119,7 +117,7 @@ export default function IndexScreen() {
               >
                 <LineChart
                   data={{
-                    labels: weightLog.map((log) => String(log.id)),
+                    labels: weightLog.map((log) => String(log.created_at)),
                     datasets: [
                       {
                         data: weightLog.map((log) => log.weight),
