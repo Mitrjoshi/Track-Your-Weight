@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Track Your Weight",
-    "slug": "track-your-weight",
+    "name": "Track Your Fitness",
+    "slug": "track-your-fitness",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "trackyourweight",
+    "scheme": "trackyourfitness",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -20,7 +20,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.itsmitrr.trackyourweight"
+      "package": "com.itsmitrr.trackyourfitness"
     },
     "web": {
       "output": "static",
@@ -50,7 +50,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "a5ac0e51-05eb-4efb-8617-66889ade095b"
+        "projectId": "ff2ec398-bad8-48a7-b638-288e925f3d1b"
       }
     },
     "owner": "itsmitrr"

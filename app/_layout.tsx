@@ -44,12 +44,17 @@ export default function RootLayout() {
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen
-          name="index"
+          name="(tabs)"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="search"
           options={{
             headerShown: true,
             headerShadowVisible: false,
-            title: "Home",
-            headerBackVisible: false,
+            title: "Search",
             headerTitleStyle: {
               fontSize: 32,
               fontWeight: 900,

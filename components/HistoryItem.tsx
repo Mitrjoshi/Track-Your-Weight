@@ -57,8 +57,6 @@ export default function HistoryItem({
     };
   });
 
-  console.log(store.getTable("weight_log"));
-
   return (
     <View
       style={{
