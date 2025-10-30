@@ -1,12 +1,7 @@
 import { COLORS } from "@/constants/theme";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { router, Tabs } from "expo-router";
-import {
-  Apple,
-  Footprints,
-  RulerDimensionLine,
-  Search,
-} from "lucide-react-native";
+import { Apple, Footprints, Ruler, Search } from "lucide-react-native";
 import React from "react";
 import { Pressable } from "react-native";
 
@@ -20,6 +15,8 @@ export default function TabLayout() {
           height: 70,
           paddingTop: 6,
           gap: 4,
+          elevation: 0,
+          borderTopWidth: 0,
         },
         tabBarLabelStyle: {
           fontSize: 14,
@@ -68,9 +65,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="weight"
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <RulerDimensionLine size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <Ruler size={size} color={color} />,
           title: "Weight",
           headerShadowVisible: false,
           headerTitleStyle: {
