@@ -41,7 +41,14 @@
             "image": "./assets/splash-icon-light.png"
           }
         }
-      ]
+      ],
+      [
+        "expo-sensors",
+        {
+          "motionPermission": "Allow $(PRODUCT_NAME) to access your device motion"
+        }
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true,

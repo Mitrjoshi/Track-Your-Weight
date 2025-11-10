@@ -3,6 +3,8 @@ import HistoryItem from "@/components/HistoryItem";
 import LineChart from "@/components/LineChart";
 import NoData from "@/components/NoData";
 import ProgressBar from "@/components/ProgressBar";
+import Card from "@/components/shared/Card";
+import GreetingSection from "@/components/shared/GreetingSection";
 import SmallButton from "@/components/SmallButton";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
@@ -16,7 +18,6 @@ import React from "react";
 import { Pressable, ScrollView, View } from "react-native";
 
 export default function IndexScreen() {
-  const cardColor = useThemeColor({}, "menu");
   const borderColor = useThemeColor({}, "input");
   const backgroundColor = useThemeColor({}, "background");
   const secondaryText = useThemeColor({}, "secondaryText");
@@ -39,12 +40,9 @@ export default function IndexScreen() {
           paddingBottom: 90,
         }}
       >
-        <View
-          className="rounded-xl p-4 gap-4"
-          style={{
-            backgroundColor: cardColor,
-          }}
-        >
+        <GreetingSection />
+
+        <Card>
           <View className="w-full flex-row items-center justify-between">
             <View>
               <ThemedText className="text-2xl font-bold">Weight</ThemedText>
@@ -130,16 +128,11 @@ export default function IndexScreen() {
               <NoData />
             )}
           </View>
-        </View>
+        </Card>
 
         {weightLog && weightLog.length > 0 && (
           <>
-            <View
-              className="rounded-xl p-4 gap-4"
-              style={{
-                backgroundColor: cardColor,
-              }}
-            >
+            <Card>
               <View className="w-full flex-row items-center justify-between">
                 <ThemedText className="text-2xl font-bold">Progress</ThemedText>
 
@@ -162,22 +155,18 @@ export default function IndexScreen() {
                     }}
                   >
                     <ProgressBar
-                      weight={historyLog[0].weight}
+                      value={historyLog[0].weight}
                       goal={latestGoal}
+                      segments={10}
                     />
                   </View>
                 ) : (
                   <NoData />
                 )}
               </View>
-            </View>
+            </Card>
 
-            <View
-              className="rounded-xl p-4 gap-4"
-              style={{
-                backgroundColor: cardColor,
-              }}
-            >
+            <Card>
               <View className="w-full flex-row items-center justify-between">
                 <ThemedText className="text-2xl font-bold">BMI</ThemedText>
 
@@ -195,14 +184,9 @@ export default function IndexScreen() {
                   <NoData />
                 )}
               </View>
-            </View>
+            </Card>
 
-            <View
-              className="rounded-xl p-4 gap-4"
-              style={{
-                backgroundColor: cardColor,
-              }}
-            >
+            <Card>
               <View className="w-full flex-row items-center justify-between">
                 <ThemedText className="text-2xl font-bold">History</ThemedText>
               </View>
@@ -227,7 +211,7 @@ export default function IndexScreen() {
                   <NoData />
                 )}
               </View>
-            </View>
+            </Card>
           </>
         )}
       </ScrollView>

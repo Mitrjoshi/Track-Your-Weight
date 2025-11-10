@@ -1,9 +1,8 @@
 import { COLORS } from "@/constants/theme";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { router, Tabs } from "expo-router";
-import { Apple, Footprints, Ruler, Search } from "lucide-react-native";
+import { Tabs } from "expo-router";
+import { Apple, Ruler } from "lucide-react-native";
 import React from "react";
-import { Pressable } from "react-native";
 
 export default function TabLayout() {
   const textColor = useThemeColor({}, "text");
@@ -30,35 +29,11 @@ export default function TabLayout() {
         name="index"
         options={{
           tabBarIcon: ({ color, size }) => <Apple size={size} color={color} />,
-          title: "Calories",
+          title: "Health",
           headerShadowVisible: false,
           headerTitleStyle: {
-            fontSize: 32,
-            fontWeight: 900,
-          },
-          headerRight: () => (
-            <Pressable
-              onPress={() => {
-                router.push("/search");
-              }}
-              className="p-4 aspect-square"
-            >
-              <Search color={textColor} size={24} strokeWidth={2.5} />
-            </Pressable>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="pedometer"
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Footprints size={size} color={color} />
-          ),
-          title: "Steps",
-          headerShadowVisible: false,
-          headerTitleStyle: {
-            fontSize: 32,
-            fontWeight: 900,
+            fontSize: 36,
+            fontFamily: "Balthazar_400Regular",
           },
         }}
       />
@@ -69,8 +44,8 @@ export default function TabLayout() {
           title: "Weight",
           headerShadowVisible: false,
           headerTitleStyle: {
-            fontSize: 32,
-            fontWeight: 900,
+            fontSize: 36,
+            fontFamily: "Balthazar_400Regular",
           },
         }}
       />

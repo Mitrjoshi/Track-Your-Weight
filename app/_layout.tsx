@@ -1,4 +1,8 @@
+import { ThemedView } from "@/components/ui/ThemedView";
 import "@/global.css";
+import { useColorScheme } from "@/hooks/use-color-scheme";
+import { loadStore } from "@/lib/tinybase";
+import { Balthazar_400Regular, useFonts } from "@expo-google-fonts/balthazar";
 import {
   DarkTheme,
   DefaultTheme,
@@ -6,13 +10,10 @@ import {
 } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import "react-native-reanimated";
-
-import { ThemedView } from "@/components/ui/ThemedView";
-import { useColorScheme } from "@/hooks/use-color-scheme";
-import { loadStore } from "@/lib/tinybase";
 import { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
+
+import "react-native-reanimated";
 
 export const unstable_settings = {
   anchor: "(tabs)",
@@ -22,6 +23,10 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [isReady, setIsReady] = useState(false);
 
+  let [fontsLoaded] = useFonts({
+    Balthazar_400Regular,
+  });
+
   useEffect(() => {
     const load = async () => {
       await loadStore();
@@ -30,7 +35,7 @@ export default function RootLayout() {
     load();
   }, []);
 
-  if (!isReady) {
+  if (!isReady || !fontsLoaded) {
     return (
       <ThemedView
         style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
@@ -56,8 +61,8 @@ export default function RootLayout() {
             headerShadowVisible: false,
             title: "Search",
             headerTitleStyle: {
-              fontSize: 32,
-              fontWeight: 900,
+              fontSize: 36,
+              fontFamily: "Balthazar_400Regular",
             },
           }}
         />
@@ -68,8 +73,8 @@ export default function RootLayout() {
             headerShadowVisible: false,
             title: "Add",
             headerTitleStyle: {
-              fontSize: 32,
-              fontWeight: 900,
+              fontSize: 36,
+              fontFamily: "Balthazar_400Regular",
             },
           }}
         />
@@ -80,8 +85,8 @@ export default function RootLayout() {
             headerShadowVisible: false,
             title: "Goal",
             headerTitleStyle: {
-              fontSize: 32,
-              fontWeight: 900,
+              fontSize: 36,
+              fontFamily: "Balthazar_400Regular",
             },
           }}
         />
@@ -92,8 +97,8 @@ export default function RootLayout() {
             headerShadowVisible: false,
             title: "BMI",
             headerTitleStyle: {
-              fontSize: 32,
-              fontWeight: 900,
+              fontSize: 36,
+              fontFamily: "Balthazar_400Regular",
             },
           }}
         />
