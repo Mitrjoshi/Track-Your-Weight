@@ -38,6 +38,7 @@ export default function IndexScreen() {
           gap: 16,
           padding: 16,
           paddingBottom: 90,
+          paddingTop: 0,
         }}
       >
         <GreetingSection />
@@ -221,9 +222,10 @@ export default function IndexScreen() {
           style={{
             backgroundColor: COLORS.customPrimary,
           }}
-          className="absolute bottom-6 right-6 h-16 w-16 rounded-full flex justify-center items-center"
+          className="absolute bottom-6 right-6 h-16 flex-row px-4 rounded-full flex justify-center items-center gap-2"
         >
           <Plus color="white" strokeWidth={2} size={32} />
+          <ThemedText className="text-lg font-semibold">Add Weight</ThemedText>
         </Pressable>
       </Link>
     </ThemedView>

@@ -48,7 +48,8 @@
           "motionPermission": "Allow $(PRODUCT_NAME) to access your device motion"
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
