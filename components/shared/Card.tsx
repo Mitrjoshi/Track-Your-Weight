@@ -8,13 +8,13 @@ interface I_Props {
 
 export default function Card({
   children,
-  className,
+  className = "p-4",
 }: PropsWithChildren<I_Props>) {
   const cardColor = useThemeColor({}, "menu");
 
   return (
     <View
-      className={`rounded-xl p-4 gap-4 ${className}`}
+      className={`rounded-xl gap-4 ${className}`}
       style={{
         backgroundColor: cardColor,
       }}

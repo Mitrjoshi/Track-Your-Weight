@@ -10,7 +10,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "dev": "expo run:android",
-    "eas": "npm install -g eas-cli & eas build --profile dev --platform android"
+    "eas": "eas build --profile dev --platform android"
   },
   "dependencies": {
     "@expo-google-fonts/balthazar": "^0.4.1",

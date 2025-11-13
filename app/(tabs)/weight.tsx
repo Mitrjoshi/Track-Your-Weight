@@ -29,10 +29,30 @@ export default function IndexScreen() {
     latestBMIValue,
     latestGoal,
     goalLeft,
+
+    // Averages
+    dailyAverageWeight,
+    weeklyAverageWeight,
+    monthlyAverageWeight,
   } = useRealtimeWeightLog();
 
+  const ARRAY = [
+    {
+      label: "Daily",
+      value: dailyAverageWeight,
+    },
+    {
+      label: "Weekly",
+      value: weeklyAverageWeight,
+    },
+    {
+      label: "Monthly",
+      value: monthlyAverageWeight,
+    },
+  ];
+
   return (
-    <ThemedView className="flex-1 flex-col gap-4">
+    <ThemedView className="flex-1">
       <ScrollView
         contentContainerStyle={{
           gap: 16,
@@ -168,6 +188,49 @@ export default function IndexScreen() {
             </Card>
 
             <Card>
+              <ThemedText className="text-2xl font-bold">Average</ThemedText>
+
+              <View className="flex flex-row justify-around items-center">
+                {ARRAY.map((item, index) => (
+                  <View
+                    key={index}
+                    className="flex justify-center flex-1 items-center"
+                  >
+                    <ThemedText className="text-sm font-semibold">
+                      {item.label}
+                    </ThemedText>
+                    <View className="flex flex-row items-center gap-2">
+                      <ThemedText
+                        className={`font-bold ${
+                          item.value
+                            ? item.value > 0
+                              ? "!text-green-500"
+                              : "!text-red-500"
+                            : "!text-yellow-500"
+                        }`}
+                      >
+                        {item.value ? `${item.value} kg` : "N/A"}
+                      </ThemedText>
+                      {item.value && (
+                        <Feather
+                          name={"trending-down"}
+                          size={18}
+                          className={`${
+                            item.value
+                              ? item.value > 0
+                                ? "!text-green-500"
+                                : "!text-red-500"
+                              : "!text-yellow-500"
+                          }`}
+                        />
+                      )}
+                    </View>
+                  </View>
+                ))}
+              </View>
+            </Card>
+
+            <Card>
               <View className="w-full flex-row items-center justify-between">
                 <ThemedText className="text-2xl font-bold">BMI</ThemedText>
 
@@ -222,10 +285,9 @@ export default function IndexScreen() {
           style={{
             backgroundColor: COLORS.customPrimary,
           }}
-          className="absolute bottom-6 right-6 h-16 flex-row px-4 rounded-full flex justify-center items-center gap-2"
+          className="absolute bottom-6 right-6 h-16 aspect-square flex-row px-4 rounded-full flex justify-center items-center gap-2"
         >
           <Plus color="white" strokeWidth={2} size={32} />
-          <ThemedText className="text-lg font-semibold">Add Weight</ThemedText>
         </Pressable>
       </Link>
     </ThemedView>

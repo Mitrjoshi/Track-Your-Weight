@@ -37,7 +37,7 @@ export function useRealtimeWeightLog() {
 
       setWeightLog(sortedAsc);
 
-      // 🧩 If no weights exist, delete all BMI rows and clear BMI state
+      // If no weights exist, delete all BMI rows and clear BMI state
       if (sortedAsc.length === 0) {
         const bmiTable = store.getTable("bmi");
         if (bmiTable) {
@@ -127,6 +127,79 @@ export function useRealtimeWeightLog() {
 
   const historyLog = useMemo(() => [...weightLog].reverse(), [weightLog]);
 
+  // --- Averages: daily, weekly, monthly with minimum span (2x interval) ---
+  const { dailyAverageWeight, weeklyAverageWeight, monthlyAverageWeight } =
+    useMemo(() => {
+      if (!weightLog.length) {
+        return {
+          dailyAverageWeight: null,
+          weeklyAverageWeight: null,
+          monthlyAverageWeight: null,
+        };
+      }
+
+      const msInDay = 24 * 60 * 60 * 1000;
+
+      const earliestDate = new Date(
+        weightLog[0].created_at ?? weightLog[0].id ?? new Date().toISOString()
+      );
+      const latestDate = new Date(
+        weightLog[weightLog.length - 1].created_at ??
+          weightLog[weightLog.length - 1].id ??
+          new Date().toISOString()
+      );
+      const spanMs = latestDate.getTime() - earliestDate.getTime();
+
+      // Need at least 2×interval worth of data span
+      const hasTwoDaysOfData = spanMs >= 2 * msInDay;
+      const hasTwoWeeksOfData = spanMs >= 14 * msInDay; // 2 weeks
+      const hasTwoMonthsOfData = spanMs >= 60 * msInDay; // ~2 months (2×30d)
+
+      const now = new Date();
+      const startOfToday = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate()
+      );
+
+      const startOfWeek = new Date(startOfToday.getTime() - 6 * msInDay); // last 7 days
+      const startOfMonth = new Date(startOfToday.getTime() - 29 * msInDay); // last 30 days
+
+      const getDateFromLog = (log: any) =>
+        log.created_at ? new Date(log.created_at) : new Date();
+
+      const getAverage = (logs: I_WeightLog[]) => {
+        if (!logs.length) return null;
+        const sum = logs.reduce((acc, l) => acc + l.weight, 0);
+        return parseFloat((sum / logs.length).toFixed(1));
+      };
+
+      const dailyLogs = weightLog.filter((log) => {
+        const d = getDateFromLog(log);
+        return d >= startOfToday;
+      });
+
+      const weeklyLogs = weightLog.filter((log) => {
+        const d = getDateFromLog(log);
+        return d >= startOfWeek;
+      });
+
+      const monthlyLogs = weightLog.filter((log) => {
+        const d = getDateFromLog(log);
+        return d >= startOfMonth;
+      });
+
+      const dailyAvgRaw = getAverage(dailyLogs);
+      const weeklyAvgRaw = getAverage(weeklyLogs);
+      const monthlyAvgRaw = getAverage(monthlyLogs);
+
+      return {
+        dailyAverageWeight: hasTwoDaysOfData ? dailyAvgRaw : null,
+        weeklyAverageWeight: hasTwoWeeksOfData ? weeklyAvgRaw : null,
+        monthlyAverageWeight: hasTwoMonthsOfData ? monthlyAvgRaw : null,
+      };
+    }, [weightLog]);
+
   // --- Latest BMI log ---
   const latestBMILog = useMemo(
     () => bmiLog[bmiLog.length - 1] ?? null,
@@ -154,6 +227,11 @@ export function useRealtimeWeightLog() {
     firstLog,
     lastLog,
     weightDifference,
+
+    // Averages
+    dailyAverageWeight,
+    weeklyAverageWeight,
+    monthlyAverageWeight,
 
     // BMI logs
     bmiLog,
