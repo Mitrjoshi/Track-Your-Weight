@@ -1,18 +1,15 @@
-import GreetingSection from "@/components/shared/GreetingSection";
+import Card from "@/components/shared/Card";
+import VerticalProgress from "@/components/shared/VerticalProgress";
 import WeekCalendar from "@/components/shared/WeekCalendar";
+import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { COLORS } from "@/constants/theme";
-import { useThemeColor } from "@/hooks/useThemeColor";
 import { Link } from "expo-router";
 import { Plus } from "lucide-react-native";
 import React from "react";
-import { Dimensions, Pressable, ScrollView } from "react-native";
-
-const SCREEN_WIDTH = Dimensions.get("window").width;
+import { Pressable, ScrollView, View } from "react-native";
 
 export default function IndexScreen() {
-  const secondaryText = useThemeColor({}, "secondaryText");
-
   return (
     <ThemedView className="flex-1">
       <ScrollView
@@ -23,40 +20,34 @@ export default function IndexScreen() {
           paddingTop: 0,
         }}
       >
-        <GreetingSection />
+        <WeekCalendar />
 
-        {/* <Card>
-          <ThemedText className="text-2xl font-bold">Calories</ThemedText>
-          <View className="relative flex justify-center items-center">
-            <AnimatedCircularProgress
-              fill={75}
-              size={SCREEN_WIDTH / 2.2}
-              width={15}
-              rotation={0}
-              lineCap="round"
-              tintColor={COLORS.customPrimary}
-              backgroundColor={secondaryText + "30"}
-              renderCap={({ center }) => (
-                <Circle cx={center.x} cy={center.y} r="5" fill={"white"} />
-              )}
-            />
+        <Card>
+          <ThemedText className="text-2xl font-bold">Macros</ThemedText>
 
-            <View className="absolute flex justify-center items-center">
-              <ThemedText className="text-4xl font-semibold">1910</ThemedText>
-              <ThemedText
-                numberOfLines={2}
-                style={{
-                  color: secondaryText,
-                }}
-                className="text-center text-sm"
-              >
-                kcal left
+          <View className="flex flex-row justify-between items-center">
+            <View className="flex gap-2 justify-center items-center flex-1">
+              <VerticalProgress label={"kcal"} value={0} target={2300} />
+              <ThemedText className="text-xs font-semibold">
+                Calories
               </ThemedText>
             </View>
+            <View className="flex gap-2 justify-center items-center flex-1">
+              <VerticalProgress label={"g"} value={0} target={180} />
+              <ThemedText className="text-xs font-semibold">Protein</ThemedText>
+            </View>
+            <View className="flex gap-2 justify-center items-center flex-1">
+              <VerticalProgress label={"g"} value={0} target={30} />
+              <ThemedText className="text-xs font-semibold">Fats</ThemedText>
+            </View>
+            <View className="flex gap-2 justify-center items-center flex-1">
+              <VerticalProgress label={"g"} value={1600} target={1600} />
+              <ThemedText className="text-xs font-semibold">Carbs</ThemedText>
+            </View>
           </View>
-        </Card> */}
+        </Card>
 
-        <WeekCalendar />
+        <Card></Card>
       </ScrollView>
 
       <Link href={"/search"} asChild>

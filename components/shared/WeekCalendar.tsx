@@ -106,22 +106,8 @@ const ScrollableDateStrip: React.FC<Props> = ({
             backgroundColor: selected ? COLORS.customPrimary : cardColor,
           }}
         >
-          <ThemedText
-            style={{
-              color: selected ? "black" : titleColor,
-            }}
-            className="font-bold text-xl"
-          >
-            {d.getDate()}
-          </ThemedText>
-          <ThemedText
-            style={{
-              color: selected ? "black" : titleColor,
-            }}
-            className="font-semibold text-sm"
-          >
-            {WEEK_DAYS[d.getDay()]}
-          </ThemedText>
+          <ThemedText className="text-sm">{d.getDate()}</ThemedText>
+          <ThemedText className="text-sm">{WEEK_DAYS[d.getDay()]}</ThemedText>
         </View>
       </TouchableOpacity>
     );

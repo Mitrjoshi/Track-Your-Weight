@@ -4,7 +4,6 @@ import LineChart from "@/components/LineChart";
 import NoData from "@/components/NoData";
 import ProgressBar from "@/components/ProgressBar";
 import Card from "@/components/shared/Card";
-import GreetingSection from "@/components/shared/GreetingSection";
 import SmallButton from "@/components/SmallButton";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
@@ -61,8 +60,6 @@ export default function IndexScreen() {
           paddingTop: 0,
         }}
       >
-        <GreetingSection />
-
         <Card>
           <View className="w-full flex-row items-center justify-between">
             <View>
