@@ -1,4 +1,6 @@
+import { useThemeColor } from "@/hooks/useThemeColor";
 import { FoodItem } from "@/interface/types";
+import { Plus } from "lucide-react-native";
 import React from "react";
 import { Pressable, View } from "react-native";
 import Card from "./shared/Card";
@@ -11,57 +13,71 @@ interface Props {
 export const FoodCard: React.FC<Props> = ({ item }) => {
   const { nutrients, serving } = item;
 
+  const secondaryText = useThemeColor({}, "secondaryText");
+  const borderColor = useThemeColor({}, "input");
+  const backgroundColor = useThemeColor({}, "background");
+  const iconColor = useThemeColor({}, "icon");
+
   const nutrientList = [
-    { label: "Protein", value: `${nutrients.protein ?? 0} g` },
-    { label: "Carbs", value: `${nutrients.carbohydrates ?? 0} g` },
-    { label: "Fat", value: `${nutrients.total_fat ?? 0} g` },
-    { label: "Fiber", value: `${nutrients.dietary_fiber ?? 0} g` },
-    { label: "Sodium", value: `${nutrients.sodium ?? 0} mg` },
-    { label: "Iron", value: `${nutrients.iron ?? 0} mg` },
+    { label: "Calories", value: `${nutrients.calories ?? 0} kcal` },
   ];
 
   return (
     <Pressable>
-      <Card>
-        {/* Title */}
-        <ThemedText className="text-lg font-semibold mb-1">
-          {item.name}
-        </ThemedText>
+      <Card className="p-4 flex-row items-center justify-between gap-4">
+        <View className="flex-1">
+          <ThemedText
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            className="font-semibold"
+          >
+            {item.name}
+          </ThemedText>
 
-        {/* Calories */}
-        <ThemedText className="text-4xl font-bold mb-2">
-          {nutrients.calories} kcal
-        </ThemedText>
-
-        {/* Serving */}
-        <ThemedText className="text-sm text-neutral-600 dark:text-neutral-400 mb-4">
-          Serving: {serving.metric.quantity}
-          {serving.metric.unit}
-        </ThemedText>
-
-        {/* Nutrients Grid */}
-        <View className="flex-row flex-wrap gap-3">
-          {nutrientList.map((n, index) => (
-            <View key={index} className="w-[30%] py-2">
-              <ThemedText className="text-base font-bold">{n.value}</ThemedText>
-              <ThemedText className="text-xs text-neutral-600 dark:text-neutral-400">
-                {n.label}
-              </ThemedText>
-            </View>
-          ))}
+          <View className="flex-row flex-wrap gap-2">
+            <ThemedText
+              style={{
+                color: secondaryText,
+              }}
+              className="text-sm font-semibold"
+            >
+              Serving: {serving.metric.quantity}
+              {serving.metric.unit}
+            </ThemedText>
+            {nutrientList.map((n, index) => (
+              <View key={index} className="flex-row">
+                <ThemedText
+                  style={{
+                    color: secondaryText,
+                  }}
+                  className="text-sm font-semibold"
+                >
+                  {n.label}:{" "}
+                </ThemedText>
+                <ThemedText
+                  style={{
+                    color: secondaryText,
+                  }}
+                  className="text-sm font-semibold"
+                >
+                  {n.value}
+                </ThemedText>
+              </View>
+            ))}
+          </View>
         </View>
 
-        {/* Ingredients */}
-        {item.ingredients && (
-          <View className="mt-5">
-            <ThemedText className="text-base font-semibold mb-1">
-              Ingredients
-            </ThemedText>
-            <ThemedText className="text-sm text-neutral-700 dark:text-neutral-300">
-              {item.ingredients}
-            </ThemedText>
-          </View>
-        )}
+        <Pressable
+          style={{
+            backgroundColor,
+            borderRadius: 99,
+            padding: 6,
+            borderWidth: 1,
+            borderColor,
+          }}
+        >
+          <Plus color={iconColor} />
+        </Pressable>
       </Card>
     </Pressable>
   );

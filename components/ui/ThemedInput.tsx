@@ -29,7 +29,7 @@ export const ThemedInput = forwardRef<TextInput, ThemedInputProps>(
 
     const backgroundColor = useThemeColor(
       { light: lightColor, dark: darkColor },
-      "input"
+      "menu"
     );
     const color = useThemeColor(
       { light: textLightColor, dark: textDarkColor },

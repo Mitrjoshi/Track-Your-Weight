@@ -3,7 +3,7 @@ import { ThemedInput } from "@/components/ui/ThemedInput";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { FOOD_ITEMS } from "@/constants/data";
 import { useEffect, useState } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 
 const PLACEHOLDERS = ["Egg", "Milk", "Bread", "Chicken", "Paneer"];
 
@@ -28,7 +28,7 @@ export default function SearchFood() {
         contentContainerStyle={{
           gap: 16,
           padding: 16,
-          paddingBottom: 90,
+          paddingTop: 0,
         }}
       >
         <ThemedInput
@@ -39,9 +39,11 @@ export default function SearchFood() {
           onBlur={() => setIsFocused(false)}
         />
 
-        {FOOD_ITEMS.map((item, index) => (
-          <FoodCard item={item} key={index} />
-        ))}
+        <View className="flex-col gap-2">
+          {FOOD_ITEMS.map((item, index) => (
+            <FoodCard item={item} key={index} />
+          ))}
+        </View>
       </ScrollView>
     </ThemedView>
   );

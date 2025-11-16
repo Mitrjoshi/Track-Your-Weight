@@ -44,7 +44,7 @@ export const Colors = {
     input: "#2a2a2a",
     button: "#fff",
     avatarBackground: "#2a2a2a",
-    secondaryText: "#b5b8bb",
+    secondaryText: "#818486",
     recBgColor: "#2a2a2a",
     chatBgColor: "#00578c",
     chatSecondaryText: "#b6b8bc",

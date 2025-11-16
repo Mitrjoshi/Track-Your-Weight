@@ -12,7 +12,7 @@ import Animated, {
 import { ThemedText } from "../ui/ThemedText";
 
 const SCREEN_WIDTH = Dimensions.get("window").width / 1.5;
-const BAR_WIDTH = 45; // width of the bar
+const BAR_WIDTH = 40; // width of the bar
 const INNER_PADDING = 4; // p-[4px]
 const MIN_FILL_HEIGHT = BAR_WIDTH + INNER_PADDING * 2; // enough to fully show the circle
 
@@ -54,7 +54,7 @@ export default function VerticalProgress({
 
     // If progress is below threshold, keep height at MIN_FILL_HEIGHT
     if (p <= threshold) {
-      return { height: 42 };
+      return { height: BAR_WIDTH - 3.5 };
     }
 
     // After threshold, let it grow with progress
