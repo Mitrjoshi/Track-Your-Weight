@@ -41,7 +41,7 @@ export default function IndexScreen() {
               <ThemedText className="text-xs font-semibold">Fats</ThemedText>
             </View>
             <View className="flex gap-2 justify-center items-center flex-1">
-              <VerticalProgress label={"g"} value={1600} target={1600} />
+              <VerticalProgress label={"g"} value={0} target={1600} />
               <ThemedText className="text-xs font-semibold">Carbs</ThemedText>
             </View>
           </View>
