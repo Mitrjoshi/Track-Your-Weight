@@ -19,6 +19,11 @@ export const COLORS = {
  */
 
 export const Colors = {
+  base: {
+    blue: "#09a0ec",
+    green: "#28bf75",
+    yellow: "#e9d551",
+  },
   light: {
     primary: "#009eff",
     text: "#11181C",
@@ -38,7 +43,7 @@ export const Colors = {
   dark: {
     primary: "#fff",
     text: "#ECEDEE",
-    background: "#121212",
+    background: "#0f0f0f",
     menu: "#1f1f1f",
     icon: "#fff",
     input: "#2a2a2a",

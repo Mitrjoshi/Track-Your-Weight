@@ -1,11 +1,13 @@
-import { COLORS } from "@/constants/theme";
+import { Colors, COLORS } from "@/constants/theme";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Tabs } from "expo-router";
 import { Apple, Ruler } from "lucide-react-native";
 import React from "react";
+import { useColorScheme } from "react-native";
 
 export default function TabLayout() {
   const textColor = useThemeColor({}, "text");
+  const colorScheme = useColorScheme();
 
   return (
     <Tabs
@@ -16,6 +18,8 @@ export default function TabLayout() {
           gap: 4,
           elevation: 0,
           borderTopWidth: 0,
+          backgroundColor:
+            Colors[colorScheme === "dark" ? "dark" : "light"].background,
         },
         tabBarLabelStyle: {
           fontSize: 14,
@@ -23,6 +27,10 @@ export default function TabLayout() {
         },
         tabBarInactiveTintColor: textColor,
         tabBarActiveTintColor: COLORS.customPrimary,
+        headerStyle: {
+          backgroundColor:
+            Colors[colorScheme === "dark" ? "dark" : "light"].background,
+        },
       }}
     >
       <Tabs.Screen

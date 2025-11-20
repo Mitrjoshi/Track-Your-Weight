@@ -34,11 +34,11 @@ export function ThemedLoadingButton({
     <Pressable
       onPress={onPress}
       disabled={isLoading}
-      className={`h-[45px] flex-row justify-center items-center rounded-md disabled:opacity-50`}
+      className={`h-[45px] flex-row justify-center items-center rounded-full disabled:opacity-50`}
       style={[
         style,
         {
-          backgroundColor,
+          backgroundColor: backgroundColor,
         },
       ]}
     >
@@ -49,7 +49,7 @@ export function ThemedLoadingButton({
           style={{
             color: textColor,
           }}
-          className="font-semibold"
+          className="font-bold"
         >
           {text}
         </ThemedText>

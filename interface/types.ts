@@ -4,9 +4,7 @@ export interface FoodItem {
   alternate_names: string[];
   description: string | null;
   source: string | null;
-
   nutrients: any;
-
   serving: {
     common: {
       unit: string;
@@ -19,5 +17,5 @@ export interface FoodItem {
     };
   };
 
-  ingredients: string | null;
+  ingredients: [string] | null;
 }

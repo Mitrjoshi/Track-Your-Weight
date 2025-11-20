@@ -1,4 +1,4 @@
-import { COLORS } from "@/constants/theme";
+import { Colors } from "@/constants/theme";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { Check } from "lucide-react-native";
 import React, { useEffect } from "react";
@@ -12,18 +12,21 @@ import Animated, {
 import { ThemedText } from "../ui/ThemedText";
 
 const SCREEN_WIDTH = Dimensions.get("window").width / 1.5;
-const BAR_WIDTH = 40; // width of the bar
+const BAR_WIDTH = 45; // width of the bar
 const INNER_PADDING = 4; // p-[4px]
 const MIN_FILL_HEIGHT = BAR_WIDTH + INNER_PADDING * 2; // enough to fully show the circle
+const ACTUAL_HEIGHT = SCREEN_WIDTH / 1.7;
 
 export default function VerticalProgress({
   value,
   target,
   label,
+  bgColor,
 }: {
   value: number;
   target: number;
   label?: string;
+  bgColor?: string;
 }) {
   const borderColor = useThemeColor({}, "input");
 
@@ -43,14 +46,14 @@ export default function VerticalProgress({
   }, [percentage, progress]);
 
   // threshold where the circle starts "progressing" upwards
-  const thresholdPercent = (MIN_FILL_HEIGHT / SCREEN_WIDTH) * 100;
+  const thresholdPercent = (MIN_FILL_HEIGHT / ACTUAL_HEIGHT) * 100;
   const isBelowThreshold = percentage <= thresholdPercent;
 
   const animatedStyle = useAnimatedStyle(() => {
     const p = progress.value;
-    const threshold = MIN_FILL_HEIGHT / SCREEN_WIDTH;
+    const threshold = MIN_FILL_HEIGHT / ACTUAL_HEIGHT;
 
-    const targetHeight = SCREEN_WIDTH * p;
+    const targetHeight = ACTUAL_HEIGHT * p;
 
     // If progress is below threshold, keep height at MIN_FILL_HEIGHT
     if (p <= threshold) {
@@ -63,23 +66,20 @@ export default function VerticalProgress({
 
   return (
     <>
-      <ThemedText className="text-xs">
-        {target}
-        {label}
-      </ThemedText>
       <View
         className="rounded-full overflow-hidden justify-end"
         style={{
-          height: SCREEN_WIDTH,
-          borderWidth: 2,
-          borderColor,
+          height: ACTUAL_HEIGHT,
+          borderWidth: 1,
+          backgroundColor: borderColor,
           width: BAR_WIDTH,
+          borderColor: "transparent",
         }}
       >
         <Animated.View
           style={[
             {
-              backgroundColor: COLORS.customPrimary,
+              backgroundColor: bgColor ?? Colors.base.blue,
               borderTopLeftRadius: 100,
               borderTopRightRadius: 100,
             },
@@ -90,11 +90,11 @@ export default function VerticalProgress({
           }`}
         >
           <View className="w-full aspect-square flex justify-center items-center bg-white rounded-full">
-            <ThemedText className="text-xs font-semibold !text-black">
+            <ThemedText className="text-[10px] font-bold !text-black">
               {value >= target ? (
                 <Check color={"black"} strokeWidth={2.5} />
               ) : (
-                value
+                `${label === "%" ? `${percentage.toFixed(0)}%` : value}`
               )}
             </ThemedText>
           </View>

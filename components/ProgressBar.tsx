@@ -1,6 +1,6 @@
 import { COLORS } from "@/constants/theme";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { Animated, Easing, StyleSheet, View } from "react-native";
 import { ThemedText } from "./ui/ThemedText";
 
 interface ProgressBarProps {
@@ -37,7 +37,32 @@ export default function ProgressBar({
   gradient = true,
   color = COLORS.customPrimary,
 }: ProgressBarProps) {
-  const progress = Math.min(value / goal, 1);
+  // --- NEW: internal animated value ---
+  const animatedValue = React.useRef(new Animated.Value(value)).current;
+  const [displayValue, setDisplayValue] = React.useState(value);
+
+  // When `value` changes, animate towards it
+  React.useEffect(() => {
+    Animated.timing(animatedValue, {
+      toValue: value,
+      duration: 600,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: false, // we're driving JS value, not a style prop
+    }).start();
+  }, [value, animatedValue]);
+
+  // Listen to animation updates and map to displayValue
+  React.useEffect(() => {
+    const id = animatedValue.addListener(({ value: v }) => {
+      setDisplayValue(v);
+    });
+    return () => {
+      animatedValue.removeListener(id);
+    };
+  }, [animatedValue]);
+
+  // Use the animated displayValue for the bar fill
+  const progress = Math.min(displayValue / goal, 1);
   const totalSegments = segments;
   const fullSegments = Math.floor(progress * totalSegments);
   const partialFill = progress * totalSegments - fullSegments;

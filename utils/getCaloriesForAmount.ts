@@ -6,11 +6,15 @@ export const getNutritionForAmount = (food: FoodItem, grams: number) => {
   const scale = grams / g;
 
   return {
-    calories: food.nutrients.calories * scale,
-    protein: food.nutrients.protein ? food.nutrients.protein * scale : 0,
-    carbs: food.nutrients.carbohydrates
-      ? food.nutrients.carbohydrates * scale
+    calories: (food.nutrients.calories * scale).toFixed(1),
+    protein: food.nutrients.protein
+      ? (food.nutrients.protein * scale).toFixed(1)
       : 0,
-    fat: food.nutrients.total_fat ? food.nutrients.total_fat * scale : 0,
+    carbs: food.nutrients.carbohydrates
+      ? (food.nutrients.carbohydrates * scale).toFixed(1)
+      : 0,
+    fat: food.nutrients.total_fat
+      ? (food.nutrients.total_fat * scale).toFixed(1)
+      : 0,
   };
 };

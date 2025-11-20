@@ -1,5 +1,6 @@
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { FoodItem } from "@/interface/types";
+import { router } from "expo-router";
 import { Plus } from "lucide-react-native";
 import React from "react";
 import { Pressable, View } from "react-native";
@@ -23,7 +24,16 @@ export const FoodCard: React.FC<Props> = ({ item }) => {
   ];
 
   return (
-    <Pressable>
+    <Pressable
+      onPress={() => {
+        router.push({
+          pathname: "/food",
+          params: {
+            id: item.id,
+          },
+        });
+      }}
+    >
       <Card className="p-4 flex-row items-center justify-between gap-4">
         <View className="flex-1">
           <ThemedText

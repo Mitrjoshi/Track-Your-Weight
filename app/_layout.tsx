@@ -1,4 +1,5 @@
 import { ThemedView } from "@/components/ui/ThemedView";
+import { Colors } from "@/constants/theme";
 import "@/global.css";
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { loadStore } from "@/lib/tinybase";
@@ -15,10 +16,6 @@ import { ActivityIndicator } from "react-native";
 
 import "react-native-reanimated";
 
-export const unstable_settings = {
-  anchor: "(tabs)",
-};
-
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [isReady, setIsReady] = useState(false);
@@ -26,6 +23,8 @@ export default function RootLayout() {
   let [fontsLoaded] = useFonts({
     Balthazar_400Regular,
   });
+
+  const isLoggedIn = false;
 
   useEffect(() => {
     const load = async () => {
@@ -40,68 +39,50 @@ export default function RootLayout() {
       <ThemedView
         style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
       >
-        <ActivityIndicator />
+        <ActivityIndicator color={Colors.base.blue} size={"large"} />
       </ThemedView>
     );
   }
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen
-          name="(tabs)"
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="search"
-          options={{
-            headerShown: true,
-            headerShadowVisible: false,
-            title: "Search",
-            headerTitleStyle: {
-              fontSize: 36,
-              fontFamily: "Balthazar_400Regular",
-            },
-          }}
-        />
-        <Stack.Screen
-          name="add"
-          options={{
-            headerShown: true,
-            headerShadowVisible: false,
-            title: "Add",
-            headerTitleStyle: {
-              fontSize: 36,
-              fontFamily: "Balthazar_400Regular",
-            },
-          }}
-        />
-        <Stack.Screen
-          name="goal"
-          options={{
-            headerShown: true,
-            headerShadowVisible: false,
-            title: "Goal",
-            headerTitleStyle: {
-              fontSize: 36,
-              fontFamily: "Balthazar_400Regular",
-            },
-          }}
-        />
-        <Stack.Screen
-          name="bmi"
-          options={{
-            headerShown: true,
-            headerShadowVisible: false,
-            title: "BMI",
-            headerTitleStyle: {
-              fontSize: 36,
-              fontFamily: "Balthazar_400Regular",
-            },
-          }}
-        />
+      <Stack
+        screenOptions={{
+          headerStyle: {
+            backgroundColor:
+              Colors[colorScheme === "dark" ? "dark" : "light"].background,
+          },
+        }}
+      >
+        <Stack.Protected guard={!isLoggedIn}>
+          <Stack.Screen
+            name="index"
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="user-goals"
+            options={{
+              headerShown: true,
+              headerShadowVisible: false,
+              title: "Goals",
+              headerTitleStyle: {
+                fontSize: 36,
+                fontFamily: "Balthazar_400Regular",
+              },
+            }}
+          />
+        </Stack.Protected>
+
+        <Stack.Protected guard={isLoggedIn}>
+          <Stack.Screen
+            name="private"
+            options={{
+              headerShown: false,
+            }}
+          />
+        </Stack.Protected>
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
