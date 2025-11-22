@@ -13,6 +13,7 @@
     "eas": "eas build --profile dev --platform android"
   },
   "dependencies": {
+    "@expo-google-fonts/texturina": "^0.4.2",
     "@expo/vector-icons": "^15.0.2",
     "@quidone/react-native-wheel-picker": "^1.6.1",
     "@react-navigation/bottom-tabs": "^7.4.0",

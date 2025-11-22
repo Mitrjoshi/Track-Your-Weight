@@ -13,10 +13,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { loadStore } from "@/lib/tinybase";
 import { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
-
-export const unstable_settings = {
-  anchor: "(tabs)",
-};
+// import { useFonts, Inter_900Black } from '@expo-google-fonts/texturina';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -48,7 +45,7 @@ export default function RootLayout() {
           options={{
             headerShown: true,
             headerShadowVisible: false,
-            title: "Home",
+            title: "Track Your Weight",
             headerBackVisible: false,
             headerTitleStyle: {
               fontSize: 32,

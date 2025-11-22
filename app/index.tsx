@@ -1,4 +1,5 @@
 import { BMIGauge } from "@/components/BMIGauge";
+import Card from "@/components/Card";
 import HistoryItem from "@/components/HistoryItem";
 import LineChart from "@/components/LineChart";
 import NoData from "@/components/NoData";
@@ -16,7 +17,6 @@ import React from "react";
 import { Pressable, ScrollView, View } from "react-native";
 
 export default function IndexScreen() {
-  const cardColor = useThemeColor({}, "menu");
   const borderColor = useThemeColor({}, "input");
   const backgroundColor = useThemeColor({}, "background");
   const secondaryText = useThemeColor({}, "secondaryText");
@@ -28,6 +28,10 @@ export default function IndexScreen() {
     latestBMIValue,
     latestGoal,
     goalLeft,
+
+    dailyAverageGrowth,
+    weeklyAverageGrowth,
+    monthlyAverageGrowth,
   } = useRealtimeWeightLog();
 
   return (
@@ -39,12 +43,7 @@ export default function IndexScreen() {
           paddingBottom: 90,
         }}
       >
-        <View
-          className="rounded-xl p-4 gap-4"
-          style={{
-            backgroundColor: cardColor,
-          }}
-        >
+        <Card>
           <View className="w-full flex-row items-center justify-between">
             <View>
               <ThemedText className="text-2xl font-bold">Weight</ThemedText>
@@ -130,16 +129,11 @@ export default function IndexScreen() {
               <NoData />
             )}
           </View>
-        </View>
+        </Card>
 
         {weightLog && weightLog.length > 0 && (
           <>
-            <View
-              className="rounded-xl p-4 gap-4"
-              style={{
-                backgroundColor: cardColor,
-              }}
-            >
+            <Card>
               <View className="w-full flex-row items-center justify-between">
                 <ThemedText className="text-2xl font-bold">Progress</ThemedText>
 
@@ -170,14 +164,38 @@ export default function IndexScreen() {
                   <NoData />
                 )}
               </View>
-            </View>
+            </Card>
 
-            <View
-              className="rounded-xl p-4 gap-4"
-              style={{
-                backgroundColor: cardColor,
-              }}
-            >
+            <Card>
+              <ThemedText className="text-2xl font-bold">Growth</ThemedText>
+
+              <View className="flex-row justify-around items-center">
+                <View className="flex justify-center items-center">
+                  <ThemedText className="font-semibold">
+                    {dailyAverageGrowth ?? "N/A"}
+                  </ThemedText>
+                  <ThemedText className="font-medium text-sm">Daily</ThemedText>
+                </View>
+                <View className="flex justify-center items-center">
+                  <ThemedText className="font-semibold">
+                    {weeklyAverageGrowth ?? "N/A"}
+                  </ThemedText>
+                  <ThemedText className="font-medium text-sm">
+                    Weekly
+                  </ThemedText>
+                </View>
+                <View className="flex justify-center items-center">
+                  <ThemedText className="font-semibold">
+                    {monthlyAverageGrowth ?? "N/A"}
+                  </ThemedText>
+                  <ThemedText className="font-medium text-sm">
+                    Yearly
+                  </ThemedText>
+                </View>
+              </View>
+            </Card>
+
+            <Card>
               <View className="w-full flex-row items-center justify-between">
                 <ThemedText className="text-2xl font-bold">BMI</ThemedText>
 
@@ -195,14 +213,9 @@ export default function IndexScreen() {
                   <NoData />
                 )}
               </View>
-            </View>
+            </Card>
 
-            <View
-              className="rounded-xl p-4 gap-4"
-              style={{
-                backgroundColor: cardColor,
-              }}
-            >
+            <Card>
               <View className="w-full flex-row items-center justify-between">
                 <ThemedText className="text-2xl font-bold">History</ThemedText>
               </View>
@@ -227,7 +240,7 @@ export default function IndexScreen() {
                   <NoData />
                 )}
               </View>
-            </View>
+            </Card>
           </>
         )}
       </ScrollView>
