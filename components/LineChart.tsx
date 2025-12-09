@@ -12,7 +12,7 @@ export default function LineChart({ data }: { data: LineChartData }) {
   const cardColor = useThemeColor({}, "icon");
 
   const screenWidth = Dimensions.get("window").width;
-  const chartWidth = screenWidth - 48;
+  const chartWidth = screenWidth - 16 * 5;
 
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const hideTimeout = useRef<number | null>(null);
@@ -25,8 +25,8 @@ export default function LineChart({ data }: { data: LineChartData }) {
       yAxisSuffix=" kg"
       withShadow={false}
       withInnerLines={true}
-      withVerticalLines={false}
       transparent
+      withVerticalLines={false}
       withVerticalLabels={false}
       chartConfig={{
         decimalPlaces: 1,
@@ -44,6 +44,7 @@ export default function LineChart({ data }: { data: LineChartData }) {
           color: textColor,
         },
       }}
+      segments={4}
       bezier
       onDataPointClick={({ index }) => {
         setSelectedIndex(index);

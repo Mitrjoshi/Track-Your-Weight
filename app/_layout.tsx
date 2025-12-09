@@ -1,4 +1,7 @@
+import { ThemedView } from "@/components/ui/ThemedView";
 import "@/global.css";
+import { useColorScheme } from "@/hooks/use-color-scheme";
+import { loadStore } from "@/lib/tinybase";
 import {
   DarkTheme,
   DefaultTheme,
@@ -6,14 +9,9 @@ import {
 } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import "react-native-reanimated";
-
-import { ThemedView } from "@/components/ui/ThemedView";
-import { useColorScheme } from "@/hooks/use-color-scheme";
-import { loadStore } from "@/lib/tinybase";
 import { useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
-// import { useFonts, Inter_900Black } from '@expo-google-fonts/texturina';
+import "react-native-reanimated";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -45,7 +43,7 @@ export default function RootLayout() {
           options={{
             headerShown: true,
             headerShadowVisible: false,
-            title: "Track Your Weight",
+            title: "Home",
             headerBackVisible: false,
             headerTitleStyle: {
               fontSize: 32,

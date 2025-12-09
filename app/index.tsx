@@ -29,9 +29,9 @@ export default function IndexScreen() {
     latestGoal,
     goalLeft,
 
-    dailyAverageGrowth,
-    weeklyAverageGrowth,
-    monthlyAverageGrowth,
+    overallAverageWeight,
+    weeklyAverageWeight,
+    monthlyAverageWeight,
   } = useRealtimeWeightLog();
 
   return (
@@ -156,6 +156,8 @@ export default function IndexScreen() {
                     }}
                   >
                     <ProgressBar
+                      start={historyLog[historyLog.length - 1].weight}
+                      // weight={75.3}
                       weight={historyLog[0].weight}
                       goal={latestGoal}
                     />
@@ -171,25 +173,110 @@ export default function IndexScreen() {
 
               <View className="flex-row justify-around items-center">
                 <View className="flex justify-center items-center">
-                  <ThemedText className="font-semibold">
-                    {dailyAverageGrowth ?? "N/A"}
-                  </ThemedText>
-                  <ThemedText className="font-medium text-sm">Daily</ThemedText>
-                </View>
-                <View className="flex justify-center items-center">
-                  <ThemedText className="font-semibold">
-                    {weeklyAverageGrowth ?? "N/A"}
-                  </ThemedText>
+                  {weeklyAverageWeight ? (
+                    <View className="flex-row items-center gap-2">
+                      <ThemedText
+                        className={`font-bold text-lg ${
+                          weeklyAverageWeight < 0
+                            ? "!text-red-500"
+                            : "!text-green-500"
+                        }`}
+                      >
+                        {weeklyAverageWeight
+                          ? `${weeklyAverageWeight} kg`
+                          : "N/A"}
+                      </ThemedText>
+                      <Feather
+                        name={
+                          weeklyAverageWeight > 0
+                            ? "trending-up"
+                            : "trending-down"
+                        }
+                        size={18}
+                        className={
+                          weeklyAverageWeight < 0
+                            ? "!text-red-500"
+                            : "!text-green-500"
+                        }
+                      />
+                    </View>
+                  ) : (
+                    <ThemedText>N/A</ThemedText>
+                  )}
                   <ThemedText className="font-medium text-sm">
                     Weekly
                   </ThemedText>
                 </View>
+
                 <View className="flex justify-center items-center">
-                  <ThemedText className="font-semibold">
-                    {monthlyAverageGrowth ?? "N/A"}
-                  </ThemedText>
+                  {monthlyAverageWeight ? (
+                    <View className="flex-row items-center gap-2">
+                      <ThemedText
+                        className={`font-bold text-lg ${
+                          monthlyAverageWeight < 0
+                            ? "!text-red-500"
+                            : "!text-green-500"
+                        }`}
+                      >
+                        {monthlyAverageWeight
+                          ? `${monthlyAverageWeight} kg`
+                          : "N/A"}
+                      </ThemedText>
+                      <Feather
+                        name={
+                          monthlyAverageWeight > 0
+                            ? "trending-up"
+                            : "trending-down"
+                        }
+                        size={18}
+                        className={
+                          monthlyAverageWeight < 0
+                            ? "!text-red-500"
+                            : "!text-green-500"
+                        }
+                      />
+                    </View>
+                  ) : (
+                    <ThemedText>N/A</ThemedText>
+                  )}
                   <ThemedText className="font-medium text-sm">
-                    Yearly
+                    Monthly
+                  </ThemedText>
+                </View>
+
+                <View className="flex justify-center items-center">
+                  {overallAverageWeight ? (
+                    <View className="flex-row items-center gap-2">
+                      <ThemedText
+                        className={`font-bold text-lg ${
+                          overallAverageWeight < 0
+                            ? "!text-red-500"
+                            : "!text-green-500"
+                        }`}
+                      >
+                        {overallAverageWeight
+                          ? `${overallAverageWeight} kg`
+                          : "N/A"}
+                      </ThemedText>
+                      <Feather
+                        name={
+                          overallAverageWeight > 0
+                            ? "trending-up"
+                            : "trending-down"
+                        }
+                        size={18}
+                        className={
+                          overallAverageWeight < 0
+                            ? "!text-red-500"
+                            : "!text-green-500"
+                        }
+                      />
+                    </View>
+                  ) : (
+                    <ThemedText>N/A</ThemedText>
+                  )}
+                  <ThemedText className="font-medium text-sm">
+                    Overall
                   </ThemedText>
                 </View>
               </View>

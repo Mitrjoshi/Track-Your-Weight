@@ -101,7 +101,7 @@ export const BMIGauge: React.FC<BMIScaleProps> = ({ bmi }) => {
       <View
         style={{
           position: "absolute",
-          bottom: 40,
+          bottom: 38,
           left: `${position}%`,
           transform: [{ translateX: -8 }],
         }}
@@ -109,9 +109,9 @@ export const BMIGauge: React.FC<BMIScaleProps> = ({ bmi }) => {
         <View
           style={{
             width: 2,
-            height: 20,
+            height: 24,
             backgroundColor: textColor,
-            borderRadius: 8,
+            borderRadius: 99,
           }}
         />
       </View>
