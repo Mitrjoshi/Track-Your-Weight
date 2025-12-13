@@ -44,6 +44,106 @@ export default function IndexScreen() {
         }}
       >
         <Card>
+          <ThemedText className="text-2xl font-bold">Growth</ThemedText>
+
+          <View className="flex-row justify-around items-center">
+            <View className="flex justify-center items-center">
+              {weeklyAverageWeight ? (
+                <View className="flex-row items-center gap-2">
+                  <ThemedText
+                    className={`font-bold text-lg ${
+                      weeklyAverageWeight < 0
+                        ? "!text-red-500"
+                        : "!text-green-500"
+                    }`}
+                  >
+                    {weeklyAverageWeight ? `${weeklyAverageWeight} kg` : "N/A"}
+                  </ThemedText>
+                  <Feather
+                    name={
+                      weeklyAverageWeight > 0 ? "trending-up" : "trending-down"
+                    }
+                    size={18}
+                    className={
+                      weeklyAverageWeight < 0
+                        ? "!text-red-500"
+                        : "!text-green-500"
+                    }
+                  />
+                </View>
+              ) : (
+                <ThemedText>N/A</ThemedText>
+              )}
+              <ThemedText className="font-medium text-sm">Weekly</ThemedText>
+            </View>
+
+            <View className="flex justify-center items-center">
+              {monthlyAverageWeight ? (
+                <View className="flex-row items-center gap-2">
+                  <ThemedText
+                    className={`font-bold text-lg ${
+                      monthlyAverageWeight < 0
+                        ? "!text-red-500"
+                        : "!text-green-500"
+                    }`}
+                  >
+                    {monthlyAverageWeight
+                      ? `${monthlyAverageWeight} kg`
+                      : "N/A"}
+                  </ThemedText>
+                  <Feather
+                    name={
+                      monthlyAverageWeight > 0 ? "trending-up" : "trending-down"
+                    }
+                    size={18}
+                    className={
+                      monthlyAverageWeight < 0
+                        ? "!text-red-500"
+                        : "!text-green-500"
+                    }
+                  />
+                </View>
+              ) : (
+                <ThemedText>N/A</ThemedText>
+              )}
+              <ThemedText className="font-medium text-sm">Monthly</ThemedText>
+            </View>
+
+            <View className="flex justify-center items-center">
+              {overallAverageWeight ? (
+                <View className="flex-row items-center gap-2">
+                  <ThemedText
+                    className={`font-bold text-lg ${
+                      overallAverageWeight < 0
+                        ? "!text-red-500"
+                        : "!text-green-500"
+                    }`}
+                  >
+                    {overallAverageWeight
+                      ? `${overallAverageWeight} kg`
+                      : "N/A"}
+                  </ThemedText>
+                  <Feather
+                    name={
+                      overallAverageWeight > 0 ? "trending-up" : "trending-down"
+                    }
+                    size={18}
+                    className={
+                      overallAverageWeight < 0
+                        ? "!text-red-500"
+                        : "!text-green-500"
+                    }
+                  />
+                </View>
+              ) : (
+                <ThemedText>N/A</ThemedText>
+              )}
+              <ThemedText className="font-medium text-sm">Overall</ThemedText>
+            </View>
+          </View>
+        </Card>
+
+        <Card>
           <View className="w-full flex-row items-center justify-between">
             <View>
               <ThemedText className="text-2xl font-bold">Weight</ThemedText>
@@ -131,205 +231,83 @@ export default function IndexScreen() {
           </View>
         </Card>
 
-        {weightLog && weightLog.length > 0 && (
-          <>
-            <Card>
-              <View className="w-full flex-row items-center justify-between">
-                <ThemedText className="text-2xl font-bold">Progress</ThemedText>
+        <Card>
+          <View className="w-full flex-row items-center justify-between">
+            <ThemedText className="text-2xl font-bold">Progress</ThemedText>
 
-                <SmallButton route="/goal" text="Add Goal" />
-              </View>
+            <SmallButton route="/goal" text="Add Goal" />
+          </View>
 
+          <View
+            style={{
+              borderRadius: 12,
+              overflow: "hidden",
+            }}
+          >
+            {latestGoal ? (
               <View
+                className="p-4"
                 style={{
                   borderRadius: 12,
+                  backgroundColor: backgroundColor,
                   overflow: "hidden",
                 }}
               >
-                {latestGoal ? (
-                  <View
-                    className="p-4"
-                    style={{
-                      borderRadius: 12,
-                      backgroundColor: backgroundColor,
-                      overflow: "hidden",
-                    }}
-                  >
-                    <ProgressBar
-                      start={historyLog[historyLog.length - 1].weight}
-                      // weight={75.3}
-                      weight={historyLog[0].weight}
-                      goal={latestGoal}
-                    />
-                  </View>
-                ) : (
-                  <NoData />
-                )}
+                <ProgressBar
+                  start={historyLog[historyLog.length - 1].weight}
+                  // weight={75.3}
+                  weight={historyLog[0].weight}
+                  goal={latestGoal}
+                />
               </View>
-            </Card>
+            ) : (
+              <NoData />
+            )}
+          </View>
+        </Card>
 
-            <Card>
-              <ThemedText className="text-2xl font-bold">Growth</ThemedText>
+        <Card>
+          <View className="w-full flex-row items-center justify-between">
+            <ThemedText className="text-2xl font-bold">BMI</ThemedText>
 
-              <View className="flex-row justify-around items-center">
-                <View className="flex justify-center items-center">
-                  {weeklyAverageWeight ? (
-                    <View className="flex-row items-center gap-2">
-                      <ThemedText
-                        className={`font-bold text-lg ${
-                          weeklyAverageWeight < 0
-                            ? "!text-red-500"
-                            : "!text-green-500"
-                        }`}
-                      >
-                        {weeklyAverageWeight
-                          ? `${weeklyAverageWeight} kg`
-                          : "N/A"}
-                      </ThemedText>
-                      <Feather
-                        name={
-                          weeklyAverageWeight > 0
-                            ? "trending-up"
-                            : "trending-down"
-                        }
-                        size={18}
-                        className={
-                          weeklyAverageWeight < 0
-                            ? "!text-red-500"
-                            : "!text-green-500"
-                        }
-                      />
-                    </View>
-                  ) : (
-                    <ThemedText>N/A</ThemedText>
-                  )}
-                  <ThemedText className="font-medium text-sm">
-                    Weekly
-                  </ThemedText>
-                </View>
+            <SmallButton route="/bmi" text="Calculate" />
+          </View>
 
-                <View className="flex justify-center items-center">
-                  {monthlyAverageWeight ? (
-                    <View className="flex-row items-center gap-2">
-                      <ThemedText
-                        className={`font-bold text-lg ${
-                          monthlyAverageWeight < 0
-                            ? "!text-red-500"
-                            : "!text-green-500"
-                        }`}
-                      >
-                        {monthlyAverageWeight
-                          ? `${monthlyAverageWeight} kg`
-                          : "N/A"}
-                      </ThemedText>
-                      <Feather
-                        name={
-                          monthlyAverageWeight > 0
-                            ? "trending-up"
-                            : "trending-down"
-                        }
-                        size={18}
-                        className={
-                          monthlyAverageWeight < 0
-                            ? "!text-red-500"
-                            : "!text-green-500"
-                        }
-                      />
-                    </View>
-                  ) : (
-                    <ThemedText>N/A</ThemedText>
-                  )}
-                  <ThemedText className="font-medium text-sm">
-                    Monthly
-                  </ThemedText>
-                </View>
+          <View
+            style={{
+              borderRadius: 12,
+            }}
+          >
+            {latestBMIValue ? <BMIGauge bmi={latestBMIValue} /> : <NoData />}
+          </View>
+        </Card>
 
-                <View className="flex justify-center items-center">
-                  {overallAverageWeight ? (
-                    <View className="flex-row items-center gap-2">
-                      <ThemedText
-                        className={`font-bold text-lg ${
-                          overallAverageWeight < 0
-                            ? "!text-red-500"
-                            : "!text-green-500"
-                        }`}
-                      >
-                        {overallAverageWeight
-                          ? `${overallAverageWeight} kg`
-                          : "N/A"}
-                      </ThemedText>
-                      <Feather
-                        name={
-                          overallAverageWeight > 0
-                            ? "trending-up"
-                            : "trending-down"
-                        }
-                        size={18}
-                        className={
-                          overallAverageWeight < 0
-                            ? "!text-red-500"
-                            : "!text-green-500"
-                        }
-                      />
-                    </View>
-                  ) : (
-                    <ThemedText>N/A</ThemedText>
-                  )}
-                  <ThemedText className="font-medium text-sm">
-                    Overall
-                  </ThemedText>
-                </View>
+        <Card>
+          <View className="w-full flex-row items-center justify-between">
+            <ThemedText className="text-2xl font-bold">History</ThemedText>
+          </View>
+
+          <View
+            style={{
+              borderRadius: 12,
+            }}
+          >
+            {historyLog && historyLog.length > 0 ? (
+              <View className="flex flex-col gap-2">
+                {historyLog.map((log, index) => (
+                  <HistoryItem
+                    historyLog={historyLog}
+                    index={index}
+                    log={log}
+                    key={index}
+                  />
+                ))}
               </View>
-            </Card>
-
-            <Card>
-              <View className="w-full flex-row items-center justify-between">
-                <ThemedText className="text-2xl font-bold">BMI</ThemedText>
-
-                <SmallButton route="/bmi" text="Calculate" />
-              </View>
-
-              <View
-                style={{
-                  borderRadius: 12,
-                }}
-              >
-                {latestBMIValue ? (
-                  <BMIGauge bmi={latestBMIValue} />
-                ) : (
-                  <NoData />
-                )}
-              </View>
-            </Card>
-
-            <Card>
-              <View className="w-full flex-row items-center justify-between">
-                <ThemedText className="text-2xl font-bold">History</ThemedText>
-              </View>
-
-              <View
-                style={{
-                  borderRadius: 12,
-                }}
-              >
-                {historyLog && historyLog.length > 0 ? (
-                  <View className="flex flex-col gap-2">
-                    {historyLog.map((log, index) => (
-                      <HistoryItem
-                        historyLog={historyLog}
-                        index={index}
-                        log={log}
-                        key={index}
-                      />
-                    ))}
-                  </View>
-                ) : (
-                  <NoData />
-                )}
-              </View>
-            </Card>
-          </>
-        )}
+            ) : (
+              <NoData />
+            )}
+          </View>
+        </Card>
       </ScrollView>
 
       <Link href={"/add"} asChild>

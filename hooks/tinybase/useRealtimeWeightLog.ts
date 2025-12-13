@@ -182,6 +182,30 @@ export function useRealtimeWeightLog() {
     [goalLog]
   );
 
+  //calculate total growth entries and loss entries
+  const { totalGrowthEntries, totalLossEntries } = useMemo(() => {
+    if (weightLog.length < 2) {
+      return { totalGrowthEntries: 0, totalLossEntries: 0 };
+    }
+
+    let growth = 0;
+    let loss = 0;
+
+    for (let i = 1; i < weightLog.length; i++) {
+      const prev = weightLog[i - 1].weight;
+      const curr = weightLog[i].weight;
+
+      if (curr > prev) growth++;
+      else if (curr < prev) loss++;
+      // equal weight → ignored
+    }
+
+    return {
+      totalGrowthEntries: growth,
+      totalLossEntries: loss,
+    };
+  }, [weightLog]);
+
   return {
     // Weight logs
     weightLog,
@@ -201,5 +225,8 @@ export function useRealtimeWeightLog() {
     goalLog,
     latestGoal,
     goalLeft: latestGoal ? latestGoal - (historyLog[0]?.weight ?? 0) : null,
+
+    totalGrowthEntries,
+    totalLossEntries,
   };
 }
