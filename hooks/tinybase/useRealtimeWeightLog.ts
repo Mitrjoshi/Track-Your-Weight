@@ -3,7 +3,49 @@ import { store } from "@/lib/tinybase";
 import { flattenTable } from "@/utils/flattenTable";
 import { useEffect, useMemo, useState } from "react";
 
-export function useRealtimeWeightLog() {
+const MS_IN_DAY = 24 * 60 * 60 * 1000;
+
+function filterByInterval<T extends { created_at: string }>(
+  data: T[],
+  filter: "daily" | "weekly" | "monthly"
+) {
+  if (data.length === 0) return [];
+
+  // Daily = return all data
+  if (filter === "daily") return data;
+
+  const result: T[] = [];
+  let lastIncludedDate: Date | null = null;
+
+  for (const item of data) {
+    const currentDate = new Date(item.created_at);
+
+    if (!lastIncludedDate) {
+      // Always include the first item
+      result.push(item);
+      lastIncludedDate = currentDate;
+      continue;
+    }
+
+    const daysDiff = Math.floor(
+      (currentDate.getTime() - lastIncludedDate.getTime()) / MS_IN_DAY
+    );
+
+    if (filter === "weekly" && daysDiff >= 7) {
+      result.push(item);
+      lastIncludedDate = currentDate;
+    } else if (filter === "monthly" && daysDiff >= 30) {
+      result.push(item);
+      lastIncludedDate = currentDate;
+    }
+  }
+
+  return result;
+}
+
+export function useRealtimeWeightLog(
+  filter: "daily" | "weekly" | "monthly" = "daily"
+) {
   const [weightLog, setWeightLog] = useState<I_WeightLog[]>([]);
   const [bmiLog, setBMILog] = useState<I_BMI[]>([]);
   const [goalLog, setGoalLog] = useState<
@@ -206,6 +248,10 @@ export function useRealtimeWeightLog() {
     };
   }, [weightLog]);
 
+  const filteredWeightLog = useMemo(() => {
+    return filterByInterval(weightLog, filter);
+  }, [weightLog, filter]);
+
   return {
     // Weight logs
     weightLog,
@@ -228,5 +274,6 @@ export function useRealtimeWeightLog() {
 
     totalGrowthEntries,
     totalLossEntries,
+    filteredWeightLog,
   };
 }

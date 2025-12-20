@@ -1,5 +1,6 @@
 import { BMIGauge } from "@/components/BMIGauge";
 import Card from "@/components/Card";
+import ChartFilterButtonGroup from "@/components/ChartFilterButtonGroup";
 import HistoryItem from "@/components/HistoryItem";
 import LineChart from "@/components/LineChart";
 import NoData from "@/components/NoData";
@@ -21,6 +22,10 @@ export default function IndexScreen() {
   const backgroundColor = useThemeColor({}, "background");
   const secondaryText = useThemeColor({}, "secondaryText");
 
+  const [activeGroup, setActiveGroup] = React.useState<
+    "daily" | "weekly" | "monthly"
+  >("daily");
+
   const {
     weightLog,
     weightDifference,
@@ -28,11 +33,12 @@ export default function IndexScreen() {
     latestBMIValue,
     latestGoal,
     goalLeft,
+    filteredWeightLog,
 
     overallAverageWeight,
     weeklyAverageWeight,
     monthlyAverageWeight,
-  } = useRealtimeWeightLog();
+  } = useRealtimeWeightLog(activeGroup);
 
   return (
     <ThemedView className="flex-1 flex-col gap-4">
@@ -43,6 +49,136 @@ export default function IndexScreen() {
           paddingBottom: 90,
         }}
       >
+        <Card>
+          <View className="w-full flex-row items-center justify-between">
+            <View>
+              <ThemedText className="text-2xl font-bold">Weight</ThemedText>
+              {goalLeft && (
+                <ThemedText
+                  style={{
+                    color: secondaryText,
+                  }}
+                  className="text-sm font-medium"
+                >
+                  {goalLeft?.toFixed(1)} kgs left to reach your goal.
+                </ThemedText>
+              )}
+            </View>
+
+            {weightDifference ? (
+              <View
+                style={{
+                  backgroundColor,
+                  borderRadius: 8,
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                  borderWidth: 1,
+                  borderColor,
+                }}
+                className="flex items-center flex-row gap-3"
+              >
+                <Feather
+                  name={weightDifference > 0 ? "trending-up" : "trending-down"}
+                  size={18}
+                  className={
+                    weightDifference < 0 ? "!text-red-500" : "!text-green-500"
+                  }
+                />
+
+                <ThemedText
+                  className={`font-bold text-sm ${
+                    weightDifference < 0 ? "!text-red-500" : "!text-green-500"
+                  }`}
+                >
+                  {weightDifference} kg
+                </ThemedText>
+              </View>
+            ) : (
+              <Link
+                style={{
+                  backgroundColor,
+                  borderRadius: 8,
+                  paddingHorizontal: 12,
+                  paddingVertical: 6,
+                  borderWidth: 1,
+                  borderColor,
+                }}
+                href="/add"
+              >
+                <ThemedText className="font-semibold">Add</ThemedText>
+              </Link>
+            )}
+          </View>
+
+          <View>
+            {filteredWeightLog && filteredWeightLog.length > 0 ? (
+              <View
+                style={{
+                  paddingTop: 28,
+                  borderRadius: 12,
+                  backgroundColor: backgroundColor,
+                  overflow: "hidden",
+                }}
+              >
+                <LineChart
+                  data={{
+                    labels: filteredWeightLog.map((log) =>
+                      String(log.created_at)
+                    ),
+                    datasets: [
+                      {
+                        data: filteredWeightLog.map((log) => log.weight),
+                      },
+                    ],
+                  }}
+                />
+              </View>
+            ) : (
+              <NoData />
+            )}
+          </View>
+
+          <ChartFilterButtonGroup
+            setActiveGroup={setActiveGroup}
+            activeGroup={activeGroup}
+          />
+        </Card>
+
+        <Card>
+          <View className="w-full flex-row items-center justify-between">
+            <ThemedText className="text-2xl font-bold">Progress</ThemedText>
+
+            <SmallButton route="/goal" text="Add Goal" />
+          </View>
+
+          <View
+            style={{
+              borderRadius: 12,
+              overflow: "hidden",
+            }}
+          >
+            {latestGoal ? (
+              <View
+                className="p-4"
+                style={{
+                  borderRadius: 12,
+                  backgroundColor: backgroundColor,
+                  overflow: "hidden",
+                }}
+              >
+                <ProgressBar
+                  start={historyLog[historyLog.length - 1].weight}
+                  // weight={75.3}
+                  weight={historyLog[0].weight}
+                  goal={latestGoal}
+                />
+              </View>
+            ) : (
+              <NoData />
+            )}
+          </View>
+        </Card>
+
         <Card>
           <ThemedText className="text-2xl font-bold">Growth</ThemedText>
 
@@ -140,129 +276,6 @@ export default function IndexScreen() {
               )}
               <ThemedText className="font-medium text-sm">Overall</ThemedText>
             </View>
-          </View>
-        </Card>
-
-        <Card>
-          <View className="w-full flex-row items-center justify-between">
-            <View>
-              <ThemedText className="text-2xl font-bold">Weight</ThemedText>
-              {goalLeft && (
-                <ThemedText
-                  style={{
-                    color: secondaryText,
-                  }}
-                  className="text-sm font-medium"
-                >
-                  {goalLeft?.toFixed(1)} kgs left to reach your goal.
-                </ThemedText>
-              )}
-            </View>
-
-            {weightDifference ? (
-              <View
-                style={{
-                  backgroundColor,
-                  borderRadius: 8,
-                  paddingHorizontal: 12,
-                  paddingVertical: 6,
-                  borderWidth: 1,
-                  borderColor,
-                }}
-                className="flex items-center flex-row gap-3"
-              >
-                <Feather
-                  name={weightDifference > 0 ? "trending-up" : "trending-down"}
-                  size={18}
-                  className={
-                    weightDifference < 0 ? "!text-red-500" : "!text-green-500"
-                  }
-                />
-
-                <ThemedText
-                  className={`font-bold text-sm ${
-                    weightDifference < 0 ? "!text-red-500" : "!text-green-500"
-                  }`}
-                >
-                  {weightDifference} kg
-                </ThemedText>
-              </View>
-            ) : (
-              <Link
-                style={{
-                  backgroundColor,
-                  borderRadius: 8,
-                  paddingHorizontal: 12,
-                  paddingVertical: 6,
-                  borderWidth: 1,
-                  borderColor,
-                }}
-                href="/add"
-              >
-                <ThemedText className="font-semibold">Add</ThemedText>
-              </Link>
-            )}
-          </View>
-
-          <View>
-            {weightLog && weightLog.length > 0 ? (
-              <View
-                style={{
-                  paddingTop: 28,
-                  borderRadius: 12,
-                  backgroundColor: backgroundColor,
-                  overflow: "hidden",
-                }}
-              >
-                <LineChart
-                  data={{
-                    labels: weightLog.map((log) => String(log.created_at)),
-                    datasets: [
-                      {
-                        data: weightLog.map((log) => log.weight),
-                      },
-                    ],
-                  }}
-                />
-              </View>
-            ) : (
-              <NoData />
-            )}
-          </View>
-        </Card>
-
-        <Card>
-          <View className="w-full flex-row items-center justify-between">
-            <ThemedText className="text-2xl font-bold">Progress</ThemedText>
-
-            <SmallButton route="/goal" text="Add Goal" />
-          </View>
-
-          <View
-            style={{
-              borderRadius: 12,
-              overflow: "hidden",
-            }}
-          >
-            {latestGoal ? (
-              <View
-                className="p-4"
-                style={{
-                  borderRadius: 12,
-                  backgroundColor: backgroundColor,
-                  overflow: "hidden",
-                }}
-              >
-                <ProgressBar
-                  start={historyLog[historyLog.length - 1].weight}
-                  // weight={75.3}
-                  weight={historyLog[0].weight}
-                  goal={latestGoal}
-                />
-              </View>
-            ) : (
-              <NoData />
-            )}
           </View>
         </Card>
 
